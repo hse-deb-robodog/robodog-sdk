@@ -49,11 +49,11 @@ class Goto(Node):
         if self.result.state is TaskState.SUCCEEDED:
             self.log.info("arrived")
         elif self.result.state is TaskState.BLOCKED:
-            self.log.warning("blocked on the way: %s", self.result.message)
+            self.log.warning(f"blocked on the way: {self.result.message}")
         elif self.result.state is TaskState.CANCELED:
-            self.log.warning("someone canceled the task: %s", self.result.message)
+            self.log.warning(f"someone canceled the task: {self.result.message}")
         else:  # TaskState.FAILED
-            self.log.error("navigation failed: %s", self.result.message)
+            self.log.error(f"navigation failed: {self.result.message}")
         self.stop()
 
 

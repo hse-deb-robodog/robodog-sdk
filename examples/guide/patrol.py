@@ -55,7 +55,7 @@ class Patrol(Node):
                     self.stop()
                     return
             rounds += 1
-            self.log.info("round %d complete", rounds)
+            self.log.info(f"round {rounds} complete")
         self.stop()
 
     async def _drive_leg(self, x: float, y: float) -> bool:
@@ -66,17 +66,15 @@ class Patrol(Node):
             self.log.info("motion not permitted — waiting")
             await asyncio.sleep(1.0)
         if self.robot.preempted_by is not None:
-            self.log.info("preempted by %s — waiting", self.robot.preempted_by.value)
+            self.log.info(f"preempted by {self.robot.preempted_by.value} — waiting")
             await asyncio.sleep(1.0)
 
         result = await self.robot.navigate_to(x, y, timeout=self.config.leg_timeout)
         if result.state is TaskState.SUCCEEDED:
             self.completed += 1
-            self.log.info("reached (%.1f, %.1f)", x, y)
+            self.log.info(f"reached ({x:.1f}, {y:.1f})")
             return True
-        self.log.warning(
-            "leg to (%.1f, %.1f) ended %s: %s", x, y, result.state.value, result.message
-        )
+        self.log.warning(f"leg to ({x:.1f}, {y:.1f}) ended {result.state.value}: {result.message}")
         return False
 
 

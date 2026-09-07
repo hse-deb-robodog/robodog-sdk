@@ -63,7 +63,7 @@ class Navigate(Node):
         # Stage two: submit and wait separately, so the wait is ours to spend.
         handle = await self.robot.submit(self._stage_two_goal())
         if not handle.accepted:
-            self.log.error("stage 2 refused: %s", handle.reason)
+            self.log.error(f"stage 2 refused: {handle.reason}")
             self.stop()
             return
 
@@ -107,23 +107,20 @@ class Navigate(Node):
                 where = ""
                 if feedback.current_segment_index is not None:
                     where = f" [{feedback.current_segment_index + 1}/{feedback.total_segments}]"
+                note = f" ({feedback.note})" if feedback.note else ""
                 self.log.info(
-                    "%s: %.2f m to go — %s%s%s",
-                    feedback.task_id[:8],
-                    feedback.distance_to_goal or float("nan"),
-                    feedback.activity.value,
-                    f" ({feedback.note})" if feedback.note else "",
-                    where,
+                    f"{feedback.task_id[:8]}: {feedback.distance_to_goal or float('nan'):.2f} m"
+                    f" to go — {feedback.activity.value}{note}{where}"
                 )
             await asyncio.sleep(1.0)
 
     def _report(self, stage: str, result: TaskResult) -> None:
         if result.state is TaskState.SUCCEEDED:
-            self.log.info("%s arrived", stage)
+            self.log.info(f"{stage} arrived")
         elif result.state is TaskState.BLOCKED:
-            self.log.warning("%s blocked: %s", stage, result.message)
+            self.log.warning(f"{stage} blocked: {result.message}")
         else:
-            self.log.error("%s ended %s: %s", stage, result.state.value, result.message)
+            self.log.error(f"{stage} ended {result.state.value}: {result.message}")
 
 
 def cli() -> None:

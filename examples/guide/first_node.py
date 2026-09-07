@@ -19,7 +19,7 @@ class FirstNode(Node):
     @subscribe(StateTopics.odometry, mode="latest")
     async def on_odometry(self, msg: OdometryState) -> None:
         self.last = msg
-        self.log.info("robot at x=%.2f m, y=%.2f m", msg.x, msg.y)
+        self.log.info(f"robot at x={msg.x:.2f} m, y={msg.y:.2f} m")
 
 
 def cli() -> None:

@@ -53,7 +53,7 @@ class Alerter(Node):
     @subscribe(PerceptionTopics.detections)
     async def on_detection(self, msg: Detection) -> None:
         self.seen.append(msg)
-        self.log.info("%s at (%.1f, %.1f)", msg.label, msg.x, msg.y)
+        self.log.info(f"{msg.label} at ({msg.x:.1f}, {msg.y:.1f})")
 
 
 def cli() -> None:
