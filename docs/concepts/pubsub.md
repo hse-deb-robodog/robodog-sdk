@@ -34,20 +34,36 @@ connected in the first place.
 
 ## Latched topics
 
-A latched topic re-delivers its most recent value to a subscriber that joins
-after it was published, rather than making that subscriber wait for the next
-change. That is the mechanism behind something you have probably already
-noticed: subscribe to `StateTopics.odometry`, `StateTopics.battery`, or
-`SafetyTopics.state` and you get a value immediately, even if the robot's
-been sitting idle since before your node started. Those are state — they
-describe a condition that holds until something changes it, so a late
-subscriber genuinely needs to know the current value, not just future ones.
+`latched=True` on a topic declaration marks it as state — a value that holds
+until something changes it, which is why a late subscriber should get the
+current value immediately rather than waiting for the next change.
+`StateTopics.odometry`, `StateTopics.battery`, `SafetyTopics.state`, and
+most of the other state topics in the contract all declare it.
 
-Command topics are not latched, and that follows the same logic in reverse:
-`MotionTopics.request` describes an instruction for right now, and there is
-no "current instruction" to replay to a node that starts up later — a
-subscriber that joins late on a command topic waits for the next command,
-same as anyone else.
+What the flag promises and what the stack does today are not the same
+thing, though. Delivering a value to a late joiner requires the *producer*
+to opt into it — the plain Zenoh publishers the stack's nodes use do not —
+so on most latched keys the flag currently costs nothing and delivers
+nothing: a subscriber that joins after the last publish gets silence until
+the next one. `StateTopics.odometry` masks this in practice, because the
+robot bridge republishes it fast enough that "the next one" is a fraction
+of a second away; subscribe to `StateTopics.battery`, which updates far less
+often, right after your node starts, and you can sit with nothing for a
+while even though the robot is on and the value exists.
+
+Three keys are the exception, and answer immediately regardless: `safety/state`
+(`SafetyTopics.state`), `system_state/vda` (`StateTopics.vda`), and
+`system_state/system` (`StateTopics.system`). The processes that produce
+them back the key with a Zenoh queryable, not just a plain publish, so a
+late subscriber genuinely gets the current value rather than one that
+happens to arrive soon. That is a property of those three producers, not of
+`latched=True` in general — it is why they behave differently from every
+other latched topic in the contract, `StateTopics.battery` included.
+
+Command topics are not latched, and for a different reason: `MotionTopics.request`
+describes an instruction for right now, and there is no "current
+instruction" to hand a late subscriber even in principle — it waits for the
+next command, same as anyone else.
 
 ## Commands expire
 
@@ -94,8 +110,15 @@ uv run zenode health
 `zenode topics` lists every declared key against the contract module, so you
 can check a key or a message shape without opening `topics.py`. `zenode
 nodes` lists who is actually connected right now — the check for "is my node
-even here." `zenode health` reports each node's heartbeat, and that
-heartbeat carries `CONTRACT_VERSION`: if your project and the deployed stack
-were built against different versions of the contract, that skew shows up
-there, as a mismatched version in a health report, rather than surfacing
-later as a confusing parse error somewhere else entirely.
+even here." `zenode health` reports each node's heartbeat: counters, queue
+depths, handler latency — the numbers behind "how well is a node doing", not
+just whether it is up.
+
+`robodog_sdk.CONTRACT_VERSION` (in `robodog_sdk/__init__.py`, tracking the
+package version) exists precisely so your project and the deployed stack can
+be compared for a version skew. It is not part of the health heartbeat
+today — `zenode health` reports node identity and traffic counters, nothing
+about which contract version produced them.
+
+🚧 TODO(fabian): confirm how/where CONTRACT_VERSION surfaces at runtime
+(zenode health does not show it in zenode 0.1.0).
