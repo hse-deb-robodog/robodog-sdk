@@ -1,7 +1,7 @@
 # Documentation rework — design
 
-**Date:** 2026-09-07
-**Status:** approved by Fabian (brainstorming session)
+**Date:** 2026-09-07 (amended same day after grilling session)
+**Status:** approved by Fabian (brainstorming + grilling sessions)
 
 ## Problem
 
@@ -25,9 +25,8 @@ foundations, and no per-topic reference.
 - A per-topic reference exists: every topic's key, payload, direction,
   latched/expiry, publisher, and purpose.
 - Explanatory diagrams for the load-bearing mechanisms.
-- Docs are self-contained about bringing up the stack (simulation path uses
-  real commands from the local `robodog-digipro` repo; lab/hardware-specific
-  values get marked TODO slots).
+- Docs are self-contained: bringing up the simulated robot requires no
+  access to the private stack repo (see distribution model below).
 
 ## Non-goals
 
@@ -36,17 +35,66 @@ foundations, and no per-topic reference.
 - No changes to SDK code (except possibly docstring fixes surfaced while
   documenting).
 
-## Decisions (from brainstorming)
+## Distribution model: the simulation appliance
+
+Deployment reality: the control stack runs on the Jetson on the dog; student
+code lives in the students' own repos and talks to the stack over Zenoh via
+this SDK. Students never work inside the stack — the only reason to touch it
+is running the simulation locally. `robodog-digipro` is **private**;
+`robodog-sdk` and `zenode` are public.
+
+Decision: the SDK stays its own public repo and dependency. The simulated
+stack ships as a **container appliance**:
+
+- **One fat sim-stack image**, built and published (public GHCR) from
+  `robodog-digipro` CI. Default process set: `sim`, `motion-gateway`,
+  `safety`, `nav`, `system-state`, `joy`, `nav-map`.
+  - `joy` starts but idles without a gamepad; gamepad passthrough
+    (`/dev/input`) works on native Linux only — documented as such.
+  - `nav-map` (browser UI for submitting nav goals) is exposed: it is the
+    no-code verification tool ("if clicking works but your node doesn't,
+    the problem is your code").
+  - `localization` (odometry-passthrough fallback) is **excluded** — MOLA
+    is mandatory and two publishers on `localization/pose` must not race.
+  - `nav-viz`, `sensor-viz`, `rerun`, `vda5050`, `nav-remote` stay
+    from-source extras.
+- **Stock Zenoh router image.**
+- **Existing MOLA image** (`mola_docker/`), unchanged: it consumes the
+  sim's `sensors/livox/*` topics over Zenoh (no livox driver involved) and
+  publishes `localization/pose`, `localization/map_identity`, `map/grid`.
+  MOLA is part of the default bring-up — much of the system consumes the
+  lidar pointcloud, not just odometry. No degraded mode in the guide.
+
+Three services, one command. The compose file lives in **this repo** at
+`sim/compose.yaml` (a separate template repo may take over later), pinning
+image tags to the digipro release so compose ↔ SDK ↔ `CONTRACT_VERSION`
+stay in lockstep. Exposed ports: mjviser web viewer (`:8080`) and the
+`nav-map` UI.
+
+External dependency (digipro-side, outside this repo, no time pressure but
+precedes finalizing the setup chapter): Dockerfile + CI publish job for the
+fat image; verify the MOLA image builds on amd64 (expected fine; sim EGL
+config may need tweaks in containers without GPU).
+
+## Decisions
 
 | Question | Decision |
 |---|---|
-| Scope | Self-contained for students, including stack/sim bring-up |
+| Scope | Self-contained for students, incl. sim bring-up via the appliance |
 | Foundations | Taught here in context, not delegated to zenode docs |
 | Existing content | Keep all facts, rewrite fully; cut pure opinion |
 | Language | English |
 | Tooling | Keep Sphinx + Furo + MyST |
-| Diagrams | diagram-design skill → SVG in `docs/_static/`; mermaid only for trivial inline flows |
 | Structure | Guide (sequential) + Concepts (any order) + Reference |
+| Supported OSes | Linux + Windows (compose appliance); macOS (hybrid: native sim + containerized router/MOLA — verified by the prof); from-source as documented alternative (requires instructor-granted access to private digipro) |
+| Primary scenario | Own laptop, own router, everything local; "connect to the lab dog" is its own section |
+| Install snippets | Version substituted from `conf.py` `release`; never hand-pinned, never `main` |
+| Rollout | Single PR from `docs/rework`, structured commits per part |
+| Namespace / custom topics | `robodog` stays hard-coded (verified: no config/roadmap in digipro). Every student runs their own router, so no collision problem: **no prefix mandate**; ch. 08 keeps a light good-practice note on descriptive key names |
+| Capstone example | Course-neutral: patrol/inspection node or turtle-style driving demo — picked at writing time |
+| Diagrams | diagram-design skill with **HSE branding** onboarded from hs-esslingen.de; must stay legible in Furo light *and* dark themes; SVG in `docs/_static/`; mermaid only for trivial inline flows |
+| Snippet verification | Substantial examples are CI-tested files included via MyST `literalinclude`; trivial fragments inline, untested |
+| Old URLs | `sphinx-reredirects` stubs from the six old pages to their new homes |
 
 ## Structure
 
@@ -56,16 +104,21 @@ docs/
 │                              #   install command, license. Nothing else.
 ├── guide/
 │   ├── 01-big-picture.md      # What the Robodog system is; architecture diagram
-│   ├── 02-setup.md            # uv, Zenoh router (docker), simulation stack, verification
+│   ├── 02-setup.md            # The appliance: docker compose up (Linux/Windows),
+│   │                          #   macOS hybrid path, from-source alternative;
+│   │                          #   verification incl. clicking a nav goal in nav-map
 │   ├── 03-first-project.md    # New project: pyproject, zenode.toml, first node;
 │   │                          #   teaches async handlers / Node / run / @subscribe in passing
 │   ├── 04-driving.md          # RobotClient: move/driving/halt; the deadman in practice
-│   ├── 05-sensing.md          # Subscribing to state (odometry, battery); closing the loop
-│   ├── 06-navigation.md       # Tasks: submit, feedback, the four outcomes, preemption
+│   ├── 05-sensing.md          # Subscribing to state; built on ODOMETRY (sim publishes
+│   │                          #   no battery — battery appears in ch. 07 via FakeStack
+│   │                          #   and on the real robot); closing the loop
+│   ├── 06-navigation.md       # Tasks: browser first (nav-map), then the same from code;
+│   │                          #   submit, feedback, the four outcomes, preemption
 │   ├── 07-testing.md          # FakeStack / FakeNav; in-process harness
 │   ├── 08-custom-topics.md    # Advanced: own topics + Pydantic message types
 │   └── 09-advanced-control.md # Advanced: multi-node projects, tilt/postures, tracing;
-│                              #   ends in one worked multi-file example (e.g. patrol node)
+│                              #   ends in the worked capstone example
 ├── concepts/
 │   ├── architecture.md        # Stack processes, who talks to whom, topic groups per process
 │   ├── pubsub.md              # Zenoh/zenode messaging model: keys, namespaces, latched,
@@ -84,13 +137,16 @@ docs/
 │   ├── client.md              # RobotClient autodoc
 │   ├── messages.md            # msgs.* autodoc
 │   ├── testing.md             # testing doubles autodoc
-│   └── errors.md              # NEW: exceptions and what each means
+│   └── errors.md              # NEW: exceptions and what each means (see below)
 └── _static/                   # exported diagram SVGs (+ sources for re-rendering)
+sim/
+└── compose.yaml               # NEW: the simulation appliance (router + sim-stack + MOLA)
 ```
 
 The current six `.md` pages and `api/*.rst` are replaced by this tree; git
-history preserves them. `README.md`'s docs table is updated. `examples/`
-stays and is referenced from the guide.
+history preserves them, and `sphinx-reredirects` maps the old URLs.
+`README.md`'s docs table is updated. `examples/` stays and is referenced
+from the guide.
 
 ## Guide page template
 
@@ -118,16 +174,29 @@ Localization, Map, Nav). Per topic, a fixed entry:
 - *Details:* rate, frame conventions, caveats
 
 Mechanical facts (key, type, latched, max_age, trace) are derived from
-`topics.py`. Prose comes from existing docs/docstrings where available;
-otherwise a marked TODO slot.
+`topics.py`. "Published by" comes from the verified process → topic mapping
+gathered from digipro source. Remaining prose comes from existing
+docs/docstrings where available; otherwise a marked TODO slot.
+
+## Errors reference
+
+The SDK defines **no custom exception classes** (verified). `errors.md`
+documents the real surface: `PermissionError` (refused nav goal / guarded
+client op), `TimeoutError` (coordinator not answering), `ValueError`
+(validator failures, `wait_until_ready` misuse), `LookupError` (FakeNav),
+and `pydantic.ValidationError` (message construction, incl. limit
+violations). The old docs mention a `ServiceError` that does not exist in
+this package — the rewrite names the real exception after verifying against
+zenode.
 
 ## Diagrams
 
-Produced with the diagram-design skill, exported as SVG (light/dark-safe)
-into `docs/_static/`:
+Produced with the diagram-design skill (HSE brand tokens onboarded from
+hs-esslingen.de, theme-safe), exported as SVG into `docs/_static/`:
 
-1. System architecture — processes + SDK's place, router in the middle
-   (guide/01, concepts/architecture)
+1. System architecture — processes + SDK's place, router in the middle;
+   shows the appliance == the real dog in shape (guide/01,
+   concepts/architecture)
 2. Pub/sub model — key/namespace anatomy, decoupling, latched vs streaming
    (concepts/pubsub)
 3. Motion command flow — sources → inlet → gateway arbitration → robot;
@@ -165,7 +234,10 @@ otherwise the `-W` build fails on documents not in any toctree.
 
 - `uv run sphinx-build -W docs docs/_build/html` must pass (warnings as
   errors) at every step.
-- Guide snippets that can run against `robodog_sdk.testing` doubles are
-  exercised the way `tests/test_examples.py` does, where practical.
+- Substantial guide examples live as files exercised in CI against the
+  `robodog_sdk.testing` doubles (the way `tests/test_examples.py` does) and
+  are pulled into the docs via `literalinclude` — single source of truth.
 - Fact-preservation check: every technical claim in the old pages is either
   present in the new tree or deliberately dropped as pure opinion.
+- The macOS hybrid path is verified on real hardware (the prof's machine)
+  before the setup chapter claims it.
