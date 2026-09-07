@@ -56,8 +56,20 @@ intersphinx_mapping = {
 templates_path = []
 exclude_patterns = ["_build", "superpowers"]
 
-# Old page URLs → new homes. Filled in at cutover (see the rework plan).
-redirects: dict[str, str] = {}
+# Old page URLs → new homes, so links from course material and the stack
+# repo's docs keep working.
+redirects: dict[str, str] = {
+    "driving": "concepts/motion.html",
+    "navigation": "concepts/navigation.html",
+    "safety": "concepts/safety.html",
+    "tracing": "concepts/tracing.html",
+    "testing": "guide/07-testing.html",
+    "api/index": "reference/index.html",
+    "api/client": "reference/client.html",
+    "api/msgs": "reference/messages.html",
+    "api/contract": "reference/topics.html",
+    "api/testing": "reference/testing.html",
+}
 
 html_theme = "furo"
 html_title = f"robodog-sdk {release}"

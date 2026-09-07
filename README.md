@@ -15,6 +15,16 @@ process. You never clone the stack.
 Built on [zenode](https://github.com/hse-deb-algo-athlets/zenode). Rationale
 and the packaging decision: ADR-010 in the robodog-digipro repository.
 
+## Documentation
+
+The full docs are at <https://hse-deb-algo-athlets.github.io/robodog-sdk/>:
+
+| Document | Covers |
+|---|---|
+| [Guide](https://hse-deb-algo-athlets.github.io/robodog-sdk/guide/) | New here? Start at chapter 1 — from empty laptop to your code driving the robot |
+| [Concepts](https://hse-deb-algo-athlets.github.io/robodog-sdk/concepts/) | How the system works under the hood |
+| [Reference](https://hse-deb-algo-athlets.github.io/robodog-sdk/reference/) | Every topic, class and exception |
+
 ## Install
 
 ```bash
@@ -55,7 +65,8 @@ connect = ["tcp/localhost:7447"]
 namespace = "robodog"          # must be exactly this — see below
 ```
 
-Bring up the stack (simulation, no robot needed), then run your node:
+Bring up the stack (simulation, no robot needed), then run your node. To run
+the simulated robot: see `sim/compose.yaml` and the Guide, chapter 2.
 
 ```bash
 uv run wanderer
