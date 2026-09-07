@@ -11,4 +11,5 @@ are new to the system, start at chapter 1.
 02-setup
 03-first-project
 04-driving
+05-sensing
 ```

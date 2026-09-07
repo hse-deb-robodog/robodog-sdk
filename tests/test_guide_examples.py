@@ -12,6 +12,7 @@ import asyncio
 import first_node
 import pytest
 import timed_drive
+import wanderer
 from zenode.testing import harness
 
 from robodog_sdk.testing import FakeStack
@@ -47,3 +48,21 @@ async def test_timed_drive_drives_then_stops() -> None:
 
         await asyncio.sleep(0.4)  # past the configured duration
         assert stack.stopped, "leaving driving() must leave the robot stopped"
+
+
+async def test_wanderer_drives_until_the_distance_is_covered() -> None:
+    async with harness() as h:
+        stack = await h.start_node(FakeStack)
+        await h.start_node(
+            wanderer.Wanderer,
+            config=wanderer.WanderConfig(speed=0.3, distance=1.0),
+        )
+
+        stack.set_pose(x=0.0, y=0.0)
+        await asyncio.sleep(SETTLE)
+        assert stack.last_command is not None
+        assert stack.last_command.x == pytest.approx(0.3), "should be driving"
+
+        stack.set_pose(x=2.0, y=0.0)  # past the target distance
+        await asyncio.sleep(SETTLE)
+        assert stack.stopped, "should stop once the distance is covered"
