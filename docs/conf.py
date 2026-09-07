@@ -21,6 +21,8 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
     "sphinxcontrib.mermaid",
+    "sphinx_design",
+    "sphinx_reredirects",
 ]
 
 # Guide pages link across files with GitHub-style anchors; this makes MyST
@@ -46,7 +48,10 @@ intersphinx_mapping = {
 }
 
 templates_path = []
-exclude_patterns = ["_build"]
+exclude_patterns = ["_build", "superpowers"]
+
+# Old page URLs → new homes. Filled in at cutover (see the rework plan).
+redirects: dict[str, str] = {}
 
 html_theme = "furo"
 html_title = f"robodog-sdk {release}"
@@ -59,3 +64,11 @@ html_theme_options = {
 # Strip prompts when copying shell blocks.
 copybutton_prompt_text = r">>> |\.\.\. |\$ "
 copybutton_prompt_is_regexp = True
+
+
+def _substitute_version(app, docname, source):
+    source[0] = source[0].replace("%%SDK_VERSION%%", release)
+
+
+def setup(app):
+    app.connect("source-read", _substitute_version)
