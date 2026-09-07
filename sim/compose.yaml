@@ -1,0 +1,41 @@
+# The simulated Robodog control stack. One command brings up the same set of
+# programs that runs on the real dog's Jetson:
+#
+#     docker compose up
+#
+# Web viewer:  http://localhost:8080   (watch the simulated robot)
+# Nav UI:      http://localhost:8081   (click to send navigation goals)
+services:
+  zenoh-router:
+    # 🚧 TODO(fabian): pin the router image+tag the stack deploys with
+    image: eclipse/zenoh:1.5.1
+    ports:
+      - "7447:7447"
+
+  sim-stack:
+    # Simulation, motion gateway, safety, navigation, system-state, joy and
+    # the nav web UI in one image, published from the robodog-digipro CI.
+    # 🚧 TODO(fabian): replace with the first published tag once the image exists
+    image: ghcr.io/hse-deb-algo-athlets/robodog-sim-stack:latest
+    depends_on:
+      - zenoh-router
+    environment:
+      ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447
+    ports:
+      - "8080:8080"   # mjviser web viewer
+      # 🚧 TODO(fabian): confirm the nav-map UI port and map it here
+      - "8081:8081"
+    # Gamepad teleoperation (Linux only): uncomment to pass your gamepad
+    # through to the joy node. Has no effect on Windows/macOS.
+    # devices:
+    #   - /dev/input:/dev/input
+
+  mola:
+    # LiDAR-inertial SLAM. Consumes the simulated Livox point cloud over
+    # Zenoh and publishes pose, map identity and the occupancy grid.
+    # 🚧 TODO(fabian): image name+tag of the published MOLA image
+    image: ghcr.io/hse-deb-algo-athlets/robodog-mola:latest
+    depends_on:
+      - zenoh-router
+    environment:
+      ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447
