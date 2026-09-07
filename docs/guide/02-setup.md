@@ -44,9 +44,9 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
 
 ## Send the robot somewhere — no code yet
 
-1. Open the nav UI at `http://localhost:8081`.
+1. Open the nav UI at `http://localhost:8091`.
 
-   🚧 TODO(fabian): confirm nav-map port + a screenshot of the UI
+   🚧 TODO(fabian): add a screenshot of the nav UI once the appliance runs
 
 2. Click a point on the map to send it as a navigation goal.
 3. Switch back to the viewer at `http://localhost:8080` and watch the

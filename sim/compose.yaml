@@ -4,11 +4,12 @@
 #     docker compose up
 #
 # Web viewer:  http://localhost:8080   (watch the simulated robot)
-# Nav UI:      http://localhost:8081   (click to send navigation goals)
+# Nav UI:      http://localhost:8091   (click to send navigation goals)
 services:
   zenoh-router:
-    # 🚧 TODO(fabian): pin the router image+tag the stack deploys with
-    image: eclipse/zenoh:1.5.1
+    # The router version the stack deploys with (robodog-digipro
+    # docker/docker-compose.yml).
+    image: eclipse/zenoh:1.9.0
     ports:
       - "7447:7447"
 
@@ -21,10 +22,11 @@ services:
       - zenoh-router
     environment:
       ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447
+      # nav and the nav UI fetch the map from MOLA's HTTP API.
+      MOLA_API_URL: http://mola:8088
     ports:
       - "8080:8080"   # mjviser web viewer
-      # 🚧 TODO(fabian): confirm the nav-map UI port and map it here
-      - "8081:8081"
+      - "8091:8091"   # nav-map web UI
     # Gamepad teleoperation (Linux only): uncomment to pass your gamepad
     # through to the joy node. Has no effect on Windows/macOS.
     # devices:
@@ -32,7 +34,8 @@ services:
 
   mola:
     # LiDAR-inertial SLAM. Consumes the simulated Livox point cloud over
-    # Zenoh and publishes pose, map identity and the occupancy grid.
+    # Zenoh and publishes pose, map identity and the occupancy grid; nav and
+    # the nav UI reach its map API container-internally on port 8088.
     # 🚧 TODO(fabian): image name+tag of the published MOLA image
     image: ghcr.io/hse-deb-algo-athlets/robodog-mola:latest
     depends_on:

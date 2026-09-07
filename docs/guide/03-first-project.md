@@ -113,7 +113,7 @@ robot at x=0.02 m, y=-0.01 m
 robot at x=0.04 m, y=-0.01 m
 ```
 
-Open the nav UI from chapter 2 (`http://localhost:8081`) and click a point
+Open the nav UI from chapter 2 (`http://localhost:8091`) and click a point
 on the map to drive the robot. Watch the numbers in your terminal move as
 the robot walks there.
 
