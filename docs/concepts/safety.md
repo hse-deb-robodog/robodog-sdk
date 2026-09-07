@@ -7,7 +7,7 @@ on a stale frame — and only one of its stop paths actually latches. This page
 covers that authority, the one call that asks it correctly, and how it
 relates to the collision zones that shape commands rather than block them.
 
-<!-- diagram: safety-chain.svg inserted in the diagram task -->
+![The physical e-stop button engages a latch only the panel release clears, while a software emergency stop publishes one cancel event that safety node, nav coordinator and fleet bridge each act on without latching](../_static/safety-chain.svg)
 
 ## Hardware latches, software does not
 

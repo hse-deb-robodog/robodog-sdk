@@ -9,7 +9,7 @@ a second. This page is the mechanism behind `robot.move(...)`,
 means, why a dropped connection is safe by construction, and where tilt
 breaks from all of it.
 
-<!-- diagram: motion-flow.svg inserted in the diagram task -->
+![Four ranked command sources feed one motion inlet with a 0.3-second expiry; the gateway forwards the freshest, highest-ranking command, shaped by collision zones, to the robot](../_static/motion-flow.svg)
 
 ## Two supported ways to command
 

@@ -8,7 +8,7 @@ what its four possible endings mean, and the two ways stored state can go
 stale on you: a forgotten task id and a saved coordinate whose map has moved
 on.
 
-<!-- diagram: nav-lifecycle.svg inserted in the diagram task -->
+![A submitted goal is refused or runs with changing activity while its state stays RUNNING, ending in exactly one of SUCCEEDED, BLOCKED, FAILED or CANCELED](../_static/nav-lifecycle.svg)
 
 ## Task lifecycle
 
