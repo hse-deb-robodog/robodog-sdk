@@ -6,7 +6,13 @@ Sphinx's rST style — that is why the ``:class:`` / ``:mod:`` roles in the
 source cross-link for free. Build with ``uv run sphinx-build -W docs docs/_build/html``.
 """
 
+from __future__ import annotations
+
 from importlib.metadata import version as _version
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from sphinx.application import Sphinx
 
 project = "robodog-sdk"
 author = "Fabian Bahr"
@@ -66,9 +72,9 @@ copybutton_prompt_text = r">>> |\.\.\. |\$ "
 copybutton_prompt_is_regexp = True
 
 
-def _substitute_version(app, docname, source):
+def _substitute_version(app: Sphinx, docname: str, source: list[str]) -> None:
     source[0] = source[0].replace("%%SDK_VERSION%%", release)
 
 
-def setup(app):
+def setup(app: Sphinx) -> None:
     app.connect("source-read", _substitute_version)

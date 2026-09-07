@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 
+from pydantic import Field
 from zenode import Node, NodeConfig, run
 
 from robodog_sdk import RobotClient, TaskState
@@ -18,7 +19,9 @@ from robodog_sdk import RobotClient, TaskState
 
 class PatrolConfig(NodeConfig):
     #: Corners of the patrol route, map-frame meters, visited in order.
-    waypoints: list[tuple[float, float]] = [(1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)]
+    waypoints: list[tuple[float, float]] = Field(
+        default_factory=lambda: [(1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)]
+    )
     #: How many rounds to patrol; 0 means until stopped.
     loops: int = 0
     #: Seconds to allow per leg.
@@ -71,8 +74,9 @@ class Patrol(Node):
             self.completed += 1
             self.log.info("reached (%.1f, %.1f)", x, y)
             return True
-        self.log.warning("leg to (%.1f, %.1f) ended %s: %s",
-                         x, y, result.state.value, result.message)
+        self.log.warning(
+            "leg to (%.1f, %.1f) ended %s: %s", x, y, result.state.value, result.message
+        )
         return False
 
 

@@ -57,7 +57,7 @@ not the only way: `RobotClient` already subscribes to the topics that
 matter most, and keeps the latest value of each on `robot.state`.
 
 ```python
-robot.state.odometry.value       # the latest OdometryState, or None
+robot.state.odometry.value  # the latest OdometryState, or None
 robot.state.odometry.fresh(within=1.0)  # False if nothing arrived recently
 ```
 

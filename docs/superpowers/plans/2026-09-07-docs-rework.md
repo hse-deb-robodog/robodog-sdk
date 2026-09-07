@@ -425,7 +425,7 @@ Create `examples/guide/first_node.py`:
 ```python
 """The guide's first node: subscribe to the robot's position and log it.
 
-    uv run python examples/guide/first_node.py
+uv run python examples/guide/first_node.py
 """
 
 from __future__ import annotations
@@ -542,7 +542,7 @@ Create `examples/guide/timed_drive.py`:
 ```python
 """Drive forward for a fixed time, then stop — the guide's first movement.
 
-    uv run python examples/guide/timed_drive.py
+uv run python examples/guide/timed_drive.py
 """
 
 from __future__ import annotations
@@ -1224,8 +1224,9 @@ class Patrol(Node):
             self.completed += 1
             self.log.info("reached (%.1f, %.1f)", x, y)
             return True
-        self.log.warning("leg to (%.1f, %.1f) ended %s: %s",
-                         x, y, result.state.value, result.message)
+        self.log.warning(
+            "leg to (%.1f, %.1f) ended %s: %s", x, y, result.state.value, result.message
+        )
         return False
 
 

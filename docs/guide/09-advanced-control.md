@@ -81,12 +81,12 @@ Two different mechanisms handle body orientation, and they behave nothing
 alike:
 
 ```python
-robot.tilt(pitch_deg=10)                     # one control frame, then relaxes
-robot.hold_tilt(pitch_deg=10.0)               # re-asserted at 10 Hz until cleared
-robot.clear_tilt()                            # back to level
+robot.tilt(pitch_deg=10)  # one control frame, then relaxes
+robot.hold_tilt(pitch_deg=10.0)  # re-asserted at 10 Hz until cleared
+robot.clear_tilt()  # back to level
 
-async with robot.tilting(pitch_deg=10.0):     # held for the block
-    ...                                        # restores the previous hold on exit
+async with robot.tilting(pitch_deg=10.0):  # held for the block
+    ...  # restores the previous hold on exit
 ```
 
 `robot.tilt(...)` applies for a single control frame and the robot itself

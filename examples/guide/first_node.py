@@ -1,6 +1,6 @@
 """The guide's first node: subscribe to the robot's position and log it.
 
-    uv run python examples/guide/first_node.py
+uv run python examples/guide/first_node.py
 """
 
 from __future__ import annotations
