@@ -149,11 +149,11 @@ the robodog-digipro repository.
 
 | Direction | Latched | Expiry | Published by |
 |---|---|---|---|
-| you → robot | no | — | your code — `RobotClient.halt()` publishes here |
+| you → robot | no | — | your code — `RobotClient.emergency_stop()` publishes here |
 
 **What it's for:** Momentary event: stop now, without engaging the latching e-stop.
 
-**Details:** `RobotClient.halt()` stamps the calling node's own name as `source_id` and an incrementing `seq`. A physical safety panel can publish the same event; either way it is a stop, not the latch itself.
+**Details:** `RobotClient.emergency_stop()` stamps the calling node's own name as `source_id` and an incrementing `seq`, and publishes here — not `RobotClient.halt()`, which only ever publishes a zero-velocity `MovementCommand` to `motion/gateway/in` and never touches this key. The two are not interchangeable: `halt()` stops *this client's own* contribution to arbitration — a higher-ranking source keeps driving, and a running navigation task keeps going. `emergency_stop()` stops everything: the safety node, the navigation coordinator and the fleet bridge each subscribe to this event on their own, so the robot is commanded to zero, the running task is cancelled, and any order runtime is wiped, independent of this process staying alive afterward. It is the *software* stop and does not latch — only the physical switch latches; only its release press clears that. A physical safety panel can publish the same event.
 
 ### `command/motion/estop` — {class}`~robodog_sdk.msgs.motion.EmergencyStopCommand`
 
