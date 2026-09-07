@@ -9,4 +9,5 @@ are new to the system, start at chapter 1.
 
 01-big-picture
 02-setup
+03-first-project
 ```
