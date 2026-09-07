@@ -14,4 +14,5 @@ are new to the system, start at chapter 1.
 05-sensing
 06-navigation
 07-testing
+08-custom-topics
 ```

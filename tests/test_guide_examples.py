@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 
+import detections
 import first_node
 import goto
 import pytest
@@ -116,3 +117,17 @@ async def test_goto_reports_blocked_without_crashing() -> None:
 
         assert node.result is not None
         assert node.result.state is TaskState.BLOCKED
+
+
+async def test_detections_flow_from_detector_to_alerter() -> None:
+    async with harness() as h:
+        alerter = await h.start_node(detections.Alerter)
+        await h.start_node(detections.Detector)
+
+        for _ in range(50):
+            if alerter.seen:
+                break
+            await asyncio.sleep(0.05)
+
+        assert alerter.seen, "the alerter should receive the detector's messages"
+        assert alerter.seen[0].label == "ball"
