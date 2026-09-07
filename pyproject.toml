@@ -98,4 +98,4 @@ venvPath = "."
 venv = ".venv"
 # Examples are included: people copy them, so they are held to the same bar.
 include = ["src", "tests", "examples"]
-extraPaths = ["examples"]
+extraPaths = ["examples", "examples/guide"]

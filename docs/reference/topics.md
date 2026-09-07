@@ -29,7 +29,7 @@ declared intent, not current delivery.
 |---|---|---|
 | `COMMAND_MAX_AGE` | `0.3` s | Maximum age of a movement command before it is dropped rather than executed. Also the deadman: when a producer stops publishing, the gateway's watchdog falls through to zero velocity within this window. Age is measured across hosts and needs synchronized clocks (NTP/chrony). |
 | `TRACE_RATIO` | `0.01` | Fraction of trace-root messages on a continuous stream that get a recorded span. Unsampled traces still carry a trace id, so `zenode logs --trace` and `zenode trace` work at full rate; only span recording is skipped. At `0.01`, a 20 Hz odometry stream records roughly one trace every five seconds. |
-| `CONTRACT_VERSION` | the installed package version | Reported on each node's health heartbeat, so a version skew between your project and the deployed stack shows up in `zenode health` instead of as a parse error somewhere else. |
+| `CONTRACT_VERSION` | the installed package version | Exists so your project and the deployed stack can be compared for a version skew. Not currently part of `zenode health`'s output (zenode 0.1.0) — see [pub/sub](../concepts/pubsub.md#seeing-the-wire) for the current state and the open question of where it should surface. |
 | `SAFETY_SOURCE_PREFIX` | `"safety/source"` | Key template for the per-source safety latches (`safety/source/{source_id}`). See `safety_source_key` / `safety_source_topic`. |
 | `TASK_KEY_PREFIX` | `"nav/task"` | Key template for the per-task feedback, result and status keys (`nav/task/{task_id}/...`). See `task_feedback_key`, `task_result_key`, `task_status_service`. |
 

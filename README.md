@@ -322,9 +322,11 @@ get there", run the MuJoCo simulation.
 ## Versioning
 
 Semantic versioning, `0.x` while the contract settles: minor versions may move
-keys. Pin a tag. `CONTRACT_VERSION` is reported on each node's health
-heartbeat, so a skew between your project and the deployed stack shows up in
-`zenode health` instead of as a parse error somewhere else.
+keys. Pin a tag. `CONTRACT_VERSION` exists so your project and the deployed
+stack can be compared for a skew — it is not currently part of `zenode
+health`'s output (zenode 0.1.0); see the docs' [pub/sub
+concepts](https://hse-deb-algo-athlets.github.io/robodog-sdk/concepts/pubsub.html#seeing-the-wire)
+page for where that stands today.
 
 ## Development
 
