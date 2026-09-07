@@ -91,8 +91,7 @@ covering "nothing published yet", "the last identity went stale", and "the
 producer has no map right now" alike — and `None` never means "unchanged
 from before"; treat it as "don't trust this".
 
-See navigation concepts
-<!-- link when concepts/navigation.md exists --> for how the coordinator,
+See [navigation concepts](../concepts/navigation.md) for how the coordinator,
 the skills, and the map identity fit together.
 
 ## Troubleshooting
@@ -109,4 +108,4 @@ the skills, and the map identity fit together.
 ## Where to go next
 
 Continue to chapter 7. For the mechanism behind tasks and skills, see
-navigation concepts <!-- link when concepts/navigation.md exists -->.
+[navigation concepts](../concepts/navigation.md).

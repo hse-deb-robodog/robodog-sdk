@@ -123,4 +123,4 @@ router what is currently live, so it works even with nothing running.
 Continue to chapter 9, where tracing follows a message like this one across
 every node that reacts to it. For the mechanism behind publish/subscribe
 itself, see [pub/sub](../concepts/pubsub.md) and
-tracing <!-- link when concepts/tracing.md exists -->.
+[tracing](../concepts/tracing.md).

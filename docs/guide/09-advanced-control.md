@@ -150,8 +150,8 @@ uv run zenode logs --trace <id>
 `trace` shows every hop across the fleet; `logs --trace` follows only the
 log records carrying that id.
 
-See tracing concepts <!-- link when concepts/tracing.md exists --> for how
-the trace id propagates under the hood.
+See [tracing concepts](../concepts/tracing.md) for how the trace id
+propagates under the hood.
 
 ## The capstone: a patrol node
 

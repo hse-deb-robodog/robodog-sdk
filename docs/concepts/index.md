@@ -12,4 +12,6 @@ pubsub
 async-python
 motion
 safety
+navigation
+tracing
 ```
