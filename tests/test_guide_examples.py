@@ -12,6 +12,7 @@ import asyncio
 import detections
 import first_node
 import goto
+import patrol
 import pytest
 import timed_drive
 import wanderer
@@ -131,3 +132,41 @@ async def test_detections_flow_from_detector_to_alerter() -> None:
 
         assert alerter.seen, "the alerter should receive the detector's messages"
         assert alerter.seen[0].label == "ball"
+
+
+async def test_patrol_visits_the_waypoints_in_order() -> None:
+    async with harness() as h:
+        await h.start_node(FakeStack)
+        nav = await h.start_node(FakeNav)
+        node = await h.start_node(
+            patrol.Patrol,
+            config=patrol.PatrolConfig(waypoints=[(1.0, 0.0), (1.0, 1.0)], loops=1),
+        )
+
+        for _ in range(100):
+            if node.completed >= 2:
+                break
+            await asyncio.sleep(0.05)
+
+        assert node.completed == 2, "one loop over two waypoints"
+        assert len(nav.goals) == 2, "one task per waypoint"
+
+
+async def test_patrol_stops_the_route_when_a_leg_blocks() -> None:
+    async with harness() as h:
+        await h.start_node(FakeStack)
+        nav = await h.start_node(FakeNav)
+        nav.result_state = TaskState.BLOCKED
+        node = await h.start_node(
+            patrol.Patrol,
+            config=patrol.PatrolConfig(waypoints=[(1.0, 0.0), (1.0, 1.0)], loops=1),
+        )
+
+        for _ in range(50):
+            if nav.goals:
+                break
+            await asyncio.sleep(0.05)
+        await asyncio.sleep(SETTLE)
+
+        assert len(nav.goals) == 1, "a blocked leg must end the patrol, not skip ahead"
+        assert node.completed == 0
