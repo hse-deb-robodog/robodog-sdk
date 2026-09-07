@@ -49,8 +49,8 @@ the ranking — the human's real gamepad input no longer reliably outranks
 you.
 ```
 
-See motion concepts <!-- link when concepts/motion.md exists --> for how the
-gateway decides this, frame by frame.
+See [motion concepts](../concepts/motion.md) for how the gateway decides
+this, frame by frame.
 
 ## When commands go out and nothing moves
 

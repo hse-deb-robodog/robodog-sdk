@@ -22,8 +22,7 @@ async def on_start(self) -> None:
 
 It holds no privileged connection to the stack. Underneath, it publishes and
 subscribes on the same topics any node could use directly — see how commands
-reach the robot
-<!-- link when concepts/motion.md exists --> for the full picture. That
+reach the robot in [motion](../concepts/motion.md) for the full picture. That
 means anything `RobotClient` can do, another node (or a human at the
 gamepad) can also do, and the stack's usual arbitration between sources still
 applies to it.
@@ -126,5 +125,5 @@ them yourself; an out-of-range command simply never leaves your process.
 ## Where to go next
 
 Continue to chapter 5, where a node reacts to live state instead of running
-on a fixed timer. For the underlying mechanism, see motion and the command
-gateway <!-- link when concepts/motion.md exists -->.
+on a fixed timer. For the underlying mechanism, see
+[motion and the command gateway](../concepts/motion.md).
