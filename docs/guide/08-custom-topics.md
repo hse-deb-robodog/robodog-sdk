@@ -5,20 +5,20 @@
 subscribe between your own nodes.
 ```
 
-Prerequisites: chapters 3, 7 — you have a project, and you know how to run
+Prerequisites: chapters 3, 7, with a project, and knowledge of how to run
 nodes against the test harness.
 
 ## The pattern you have been using all along
 
-`StateTopics.odometry`, `MotionTopics.request`, `SafetyTopics.state` — every
+`StateTopics.odometry`, `MotionTopics.request`, `SafetyTopics.state`: every
 topic you have subscribed to or published on so far came from
 `robodog_sdk.topics`. There is nothing magical about that module. It is a
-`TopicSet` — a plain class whose attributes are `Topic` declarations, each
+`TopicSet`, a plain class whose attributes are `Topic` declarations, each
 binding a key string to a pydantic model. That is the entire mechanism, and
 it is exactly as available to your own data as it is to the stack's.
 
 If your project needs to move detections, scores, plans, or anything else
-between two of *your* nodes — even across two separate projects — you declare
+between two of *your* nodes, even across two separate projects, you declare
 a schema and a topic the same way, and you get the same delivery guarantees,
 the same validation, and the same `zenode topics` introspection for free.
 
@@ -33,53 +33,53 @@ Three pieces, each doing one job:
 - **`Detection(BaseModel)`** is the schema. It is what makes this a
   *contract* rather than an untyped blob: every field is typed, and
   pydantic validates on both ends. Construct a `Detection` with a field of
-  the wrong type — a string where `confidence` wants a float that can't be
-  coerced, say — and pydantic raises `pydantic.ValidationError` immediately,
+  the wrong type (a string where `confidence` wants a float that can't be
+  coerced, say) and pydantic raises `pydantic.ValidationError` immediately,
   in the *publisher's* process, before anything reaches the wire. A
   malformed message never makes it to a subscriber to be misinterpreted;
   the mistake surfaces where it was made.
 - **`Topic("perception/detections", Detection)`** binds that schema to a
   key. It is what `publish()` and `@subscribe()` both read to know how to
-  encode and decode — declare it once, in one module, and every node that
+  encode and decode: declare it once, in one module, and every node that
   imports it agrees on the wire format by construction. There is no
   separate step where a subscriber's idea of the schema might drift from a
   publisher's; they cannot both compile against the same `Topic` and
   disagree about what it carries.
 - **`Detector` and `Alerter`** are ordinary nodes, `publish()` and
-  `@subscribe()` used exactly as in earlier chapters — the only difference
+  `@subscribe()` used exactly as in earlier chapters. The only difference
   from `StateTopics.odometry` is that `PerceptionTopics.detections` is a
   topic *you* declared. Put `Alerter` in one project and `Detector` in a
   second, entirely separate one; as long as both import the same
   `PerceptionTopics`, they agree on the key and the schema without ever
   coordinating directly.
 
-`Topic` takes the same options regardless of who declares it — you have seen
+`Topic` takes the same options regardless of who declares it. You have seen
 several of them already, on the stack's own topics:
 
-- **`latched=True`** — declares that a late subscriber should get the last
+- **`latched=True`**: declares that a late subscriber should get the last
   published value instead of waiting for the next change. For a topic *your*
   node publishes, zenode delivers on that: publishing and subscribing through
   the SDK (as every example in this guide does) backs the topic with zenoh's
   advanced pub/sub, which caches the last value and replays it to a late
-  joiner automatically — no extra code on either end. Right for state that
+  joiner automatically, with no extra code on either end. Right for state that
   should always have a current answer. The stack's *own* producers don't all
   take that path yet, so not every stack topic that declares `latched=True`
   delivers on it today; see [pub/sub](../concepts/pubsub.md#latched-topics)
   for which ones do.
-- **`max_age=`** — subscribers drop samples older than this many seconds.
+- **`max_age=`**: subscribers drop samples older than this many seconds.
   Right for commands that must be fresh, where an old value is worse than no
   value (compare `MotionTopics.request`).
-- **`trace=True`** — marks this topic as the start of a causal chain, so
-  everything your handler does in response — further `put()` calls,
-  service calls — is linked back to it. Chapter 9 covers tracing.
+- **`trace=True`**: marks this topic as the start of a causal chain, so
+  everything your handler does in response (further `put()` calls,
+  service calls) is linked back to it. Chapter 9 covers tracing.
 
 ## Naming keys
 
 ```{tip}
-There is no mandated prefix — you run your own router, and nothing enforces
+There is no mandated prefix: you run your own router, and nothing enforces
 one. But keys share one flat namespace on the wire (`robodog/...` at
-runtime), so a short, project-specific prefix — `perception/…`,
-`team_orange/…` — keeps `zenode topics` output readable and avoids a
+runtime), so a short, project-specific prefix (`perception/…`,
+`team_orange/…`) keeps `zenode topics` output readable and avoids a
 collision if two projects ever end up sharing a router.
 ```
 
@@ -107,21 +107,21 @@ uv run zenode topics --contract robodog_sdk.topics
 ```
 
 Run `uv run zenode topics` with no `--contract` at all and it reports
-`no registered topics — pass --contract <module> that defines TopicSets` —
+`no registered topics — pass --contract <module> that defines TopicSets`;
 the listing comes from importing the module you name, not from asking a
 router what is currently live, so it works even with nothing running.
 
 ## Troubleshooting
 
 - **The subscriber never sees anything, though the publisher is clearly
-  running.** Both sides must reference the *same* `Topic` — or at least the
+  running.** Both sides must reference the *same* `Topic`, or at least the
   identical key string and schema. Two `Topic("perception/detections", ...)`
   declarations in two different modules are two different, unrelated
   bindings as far as you're concerned; import `PerceptionTopics` from one
   shared module instead of redeclaring it.
 - **A serialization or validation error appears on one side only.** The
   model changed in one project but the other still imports an older
-  version of it — add a field, rename one, or tighten a type, and every
+  version of it: add a field, rename one, or tighten a type, and every
   process holding the old shape starts disagreeing with the new one. Pin or
   update the shared module in both places together.
 

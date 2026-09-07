@@ -9,7 +9,7 @@ reference/index
 ```
 
 `robodog-sdk` is the Python package your program uses to control the
-Robodog — a Unitree Go2 driven by a control stack you talk to over the
+Robodog, a Unitree Go2 driven by a control stack you talk to over the
 network. It is for students building their own software on top of that
 stack, built on [zenode](https://hse-deb-algo-athlets.github.io/zenode/).
 
@@ -20,7 +20,7 @@ stack, built on [zenode](https://hse-deb-algo-athlets.github.io/zenode/).
 :link: guide/index
 :link-type: doc
 
-New here? Start at chapter 1 — from empty laptop to your code driving the
+New here? Start at chapter 1, from empty laptop to your code driving the
 robot.
 :::
 
@@ -46,20 +46,20 @@ Every topic, class and exception.
 uv add "robodog-sdk @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v%%SDK_VERSION%%"
 ```
 
-Two dependencies (`zenode`, `pydantic`), no hardware or simulation packages —
-it installs on any laptop in seconds. The optional `livox` extra adds CDR
+Two dependencies (`zenode`, `pydantic`), no hardware or simulation packages,
+so it installs on any laptop in seconds. The optional `livox` extra adds CDR
 point-cloud decoding for the externally-produced `livox/lidar` topic:
 
 ```bash
 uv add "robodog-sdk[livox] @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v%%SDK_VERSION%%"
 ```
 
-Semantic versioning: `0.x` may move keys between minor versions — pin the
+Semantic versioning: `0.x` may move keys between minor versions, so pin the
 tag shown here.
 
 ## License
 
-Apache License 2.0 — see
+Apache License 2.0. See
 [LICENSE](https://github.com/hse-deb-algo-athlets/robodog-sdk/blob/main/LICENSE)
 and [NOTICE](https://github.com/hse-deb-algo-athlets/robodog-sdk/blob/main/NOTICE).
 Copyright 2026 Hochschule Esslingen.

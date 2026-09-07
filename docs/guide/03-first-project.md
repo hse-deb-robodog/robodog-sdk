@@ -5,7 +5,7 @@
 running simulation; receive live data from the robot.
 ```
 
-Prerequisites: chapter 2 — the appliance is running.
+Prerequisites: chapter 2, with the appliance running.
 
 ## Create the project
 
@@ -22,7 +22,7 @@ Prerequisites: chapter 2 — the appliance is running.
    ```
 
    **What you should see:** uv resolves the package and reports it installed,
-   pulling in two runtime dependencies — `zenode`, which is the node
+   pulling in two runtime dependencies: `zenode`, which is the node
    framework the SDK is built on, and `pydantic`, which the SDK's message
    types are defined with.
 
@@ -38,18 +38,18 @@ namespace = "robodog"
 ```
 
 This file is read by zenode when your node starts. `connect` points at the
-Zenoh router you brought up in chapter 2 — the same file with the dog's own
+Zenoh router you brought up in chapter 2. The same file with the dog's own
 address in place of `localhost` talks to the real robot instead, and nothing
 else about your code changes.
 
 `namespace` matters more than it looks: every topic key the SDK uses is
 prefixed with it on the wire, and the appliance you brought up in chapter 2
-is deployed under `robodog`. Get this value wrong and there is no error —
+is deployed under `robodog`. Get this value wrong and there is no error:
 your node starts, connects, and simply never receives anything.
 
 ```{warning}
 **If your node never sees any data:** check `namespace = "robodog"` in
-`zenode.toml` first — a mismatch here produces silence, not an error. Then
+`zenode.toml` first. A mismatch here produces silence, not an error. Then
 confirm your node is actually connected by running `uv run zenode nodes` in
 the project directory; your node's name should appear in the list.
 ```
@@ -64,7 +64,7 @@ Create `first_node.py` next to `zenode.toml` with the following content:
 
 Walking through it:
 
-A `Node` is one program in the conversation — one process that can publish
+A `Node` is one program in the conversation: one process that can publish
 messages, subscribe to messages, or both. `FirstNode` is a node with a
 single job: remember the robot's most recent position.
 
@@ -74,18 +74,18 @@ is what you would use in the future to send this node its own configuration.
 
 `@subscribe(StateTopics.odometry, mode="latest")` registers `on_odometry` to
 be called whenever a new message arrives on the odometry topic. This is
-publish/subscribe — see [pub/sub concepts](../concepts/pubsub.md) for the
-full picture, but the short version is: nobody calls anybody else's
+publish/subscribe (see [pub/sub concepts](../concepts/pubsub.md) for the
+full picture), but the short version is: nobody calls anybody else's
 functions directly, programs just publish messages on named topics and
-subscribe to the ones they care about. `mode="latest"` matters here — it means that if several odometry
+subscribe to the ones they care about. `mode="latest"` matters here: it means that if several odometry
 messages arrive faster than your handler processes them, only the newest one
-is delivered; the backlog is dropped. That is what you want for a live
+is delivered, and the backlog is dropped. That is what you want for a live
 position: you care where the robot is *now*, not the history of everywhere
 it has been.
 
 `on_odometry` is `async def`. Every handler in zenode is a coroutine, because
-a node does many things concurrently — reading multiple topics, running
-timers, talking to the network — all on a single thread, using an event
+a node does many things concurrently: reading multiple topics, running
+timers, and talking to the network, all on a single thread, using an event
 loop. The loop only makes progress on the next thing once the current
 handler yields control back to it, so a handler that blocks (a long
 computation, a synchronous network call, `time.sleep`) freezes the entire
@@ -119,7 +119,7 @@ the robot walks there.
 
 ## Troubleshooting
 
-- **No log lines appear at all.** Check `zenode.toml` — the most common cause
+- **No log lines appear at all.** Check `zenode.toml`. The most common cause
   is `namespace` not set to `"robodog"`, which connects successfully but
   receives nothing. Confirm the router from chapter 2 is still running, and
   run `uv run zenode nodes` to check that your node is actually connected.

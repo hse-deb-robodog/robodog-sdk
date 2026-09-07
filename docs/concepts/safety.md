@@ -2,8 +2,8 @@
 
 One authority decides whether the robot may move at all, separately from
 whatever the motion gateway is doing with the commands it receives. It is
-built to fail toward "stopped" — on a pressed button, on a silent producer,
-on a stale frame — and only one of its stop paths actually latches. This page
+built to fail toward "stopped" (on a pressed button, on a silent producer,
+on a stale frame) and only one of its stop paths actually latches. This page
 covers that authority, the one call that asks it correctly, and how it
 relates to the collision zones that shape commands rather than block them.
 
@@ -19,8 +19,8 @@ subscription, so none of it depends on your process staying alive once the
 event is sent.
 
 That event does not latch, and it has no software counterpart that does.
-Only the physical switch latches — engaging it is what puts the safety state
-into a stopped phase — and only the release press on the panel clears that.
+Only the physical switch latches (engaging it is what puts the safety state
+into a stopped phase) and only the release press on the panel clears that.
 Software can stop the robot; it cannot stand in for the button.
 
 ## Ask `motion_permitted()`
@@ -34,14 +34,14 @@ command.
 
 `robot.motion_permitted(within=...)` is the call built to close that gap.
 It also fails safe on silence: a safety latch that stopped arriving reads
-exactly like one saying "stopped" would, which is deliberate — a crashed
+exactly like one saying "stopped" would, which is deliberate: a crashed
 safety node or a severed link must not read as permission just because
 nothing contradicts it. That is why this is a method that takes a freshness
 window, rather than a plain property: the answer depends on *when* the last
 frame arrived, not only on what it said.
 
-Reading `state.safety.value.estop` directly skips both of these. Don't —
-it neither accounts for the recovery-phase gap nor treats an old value as
+Reading `state.safety.value.estop` directly skips both of these. Don't: it
+neither accounts for the recovery-phase gap nor treats an old value as
 anything other than whatever it last said.
 
 ## Zones shape, they do not own
@@ -49,7 +49,7 @@ anything other than whatever it last said.
 The collision zones enforced at the motion gateway are a different mechanism
 from the safety latch above, and answer a different question: not "may the
 robot move," but "is something in the way of the command it was just sent."
-A breached stop zone is directional rather than absolute — see [motion](motion.md#collision-zones-shape-commands)
+A breached stop zone is directional rather than absolute: see [motion](motion.md#collision-zones-shape-commands)
 for how the gateway strips only the velocity heading into the obstacle,
 leaving the robot free to turn or reverse out. `robot.blocked_by_zone` lists
 the zones currently shaping your commands for that reason.
@@ -67,7 +67,7 @@ while not self.robot.motion_permitted():
 ```
 
 A `motion_permitted()` that returns `False` is not something your node can
-argue with — it is a report of a stop already in effect somewhere in the
+argue with: it is a report of a stop already in effect somewhere in the
 stack. Waiting on it, the way the loop above does, is the whole response: log
 it, back off, and check again, rather than treating it as a fault your node
 needs to recover from.

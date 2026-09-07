@@ -14,11 +14,11 @@ runs the *control stack*: a set of independent programs that together drive
 the robot. Among them are a robot bridge (talks to the Go2's own firmware), a
 motion gateway (arbitrates who is allowed to move the robot right now), a
 safety process (owns the emergency stop), a navigation coordinator, and a
-SLAM process — SLAM stands for simultaneous localization and mapping, and it
-is what builds the map and tracks the robot's position on it.
+SLAM process (SLAM stands for simultaneous localization and mapping; it
+builds the map and tracks the robot's position on it).
 
 You do not write code inside the control stack. You write your own program,
-in your own project, and it *talks to* the stack over the network — the stack
+in your own project, and it *talks to* the stack over the network. The stack
 itself stays untouched.
 
 The processes talk to each other, and to you, over
@@ -27,7 +27,7 @@ topics, and subscribes to the topics it cares about. Nobody calls anybody
 else's functions directly. See [pub/sub concepts](../concepts/pubsub.md)
 for how that works.
 
-`robodog-sdk` — this package — is how your Python program joins that
+`robodog-sdk` (this package) is how your Python program joins that
 conversation. It knows every topic the stack exposes and every message type
 that travels on it, and it provides `RobotClient`, an object with methods for
 the operations you will use most: driving, reading state, sending navigation
@@ -40,7 +40,7 @@ goals.
 The whole stack also runs as a simulation on your own laptop, physics and
 all, powered by MuJoCo. It publishes the same topics, carrying the same
 message types, as the stack running on the real dog. A node you write and
-test against the simulation runs against the real robot unchanged — you
+test against the simulation runs against the real robot unchanged: you
 switch which stack you point at, not how you talk to it.
 
 You bring the simulation up with a single `docker compose up`. Chapter 2 does

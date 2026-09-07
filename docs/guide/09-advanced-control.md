@@ -10,7 +10,7 @@ Prerequisites: chapters 4–8.
 ## You are not the only one commanding the robot
 
 Every command you send carries a `source`, and the motion gateway is not a
-queue — it forwards whichever *fresh* command has the highest rank, dropping
+queue: it forwards whichever *fresh* command has the highest rank, dropping
 the rest. The ranking, lowest to highest:
 
 ```
@@ -23,7 +23,7 @@ and why you resume automatically the moment they let go: there is no lock to
 take or release, and nothing to hand back. The gateway simply re-decides on
 every frame, from whatever is freshest.
 
-`robot.preempted_by` tells you who currently outranks you — `None` when
+`robot.preempted_by` tells you who currently outranks you: `None` when
 nothing does, which covers both "we are driving" and "nobody is driving".
 Reading it is optional: a node that never checks it still behaves correctly,
 because the gateway does the arbitration regardless of whether your code
@@ -32,11 +32,11 @@ quietly losing every command to a higher source.
 
 ```{warning}
 Setting a higher `source` on your own commands is not a way to "win" the
-arbitration — it is a claim to *be* that thing. `controller` means "a human
+arbitration: it is a claim to *be* that thing. `controller` means "a human
 holding the gamepad right now"; `assisted_teleop` means "human intent shaped
 by a skill". Only pass a higher source if your node genuinely is that party.
 Claiming `controller` from an autonomous routine defeats the entire point of
-the ranking — the human's real gamepad input no longer reliably outranks
+the ranking, because the human's real gamepad input no longer reliably outranks
 you.
 ```
 
@@ -48,22 +48,22 @@ this, frame by frame.
 You sent a command, the call didn't raise, and the robot isn't moving. Start
 with `robot.state.gateway`:
 
-- **`active_source`** — who won arbitration this frame. If it isn't your
-  source, someone else's command is the one being forwarded — see the
+- **`active_source`**: who won arbitration this frame. If it isn't your
+  source, someone else's command is the one being forwarded; see the
   section above.
-- **`action`** and **`active_zones`** — what the collision monitor did to
+- **`action`** and **`active_zones`**: what the collision monitor did to
   the winning command, and which zones it did it because of. A stop zone
   does not necessarily mean zero: it strips only the velocity component
   heading *into* the obstacle, leaving the robot free to turn or reverse out
   of it. Read `active_zones`, not `action` alone, for what the robot may
   still do.
-- **`watchdog_tripped`** — the winning source went silent (a crashed
+- **`watchdog_tripped`**: the winning source went silent (a crashed
   process, a dropped connection) and the gateway is holding the robot at
   zero until it speaks again. This can be true even while `active_source`
   still names your own node, if your commands stopped arriving.
 
 `robot.blocked_by_zone` is the shortcut for the zones currently shaping your
-commands — empty means nothing is breached, which is not the same as "the
+commands. Empty means nothing is breached, which is not the same as "the
 robot will move": check the watchdog and arbitration too.
 
 ## Postures: tilt and holds
@@ -81,12 +81,12 @@ async with robot.tilting(pitch_deg=10.0):  # held for the block
 ```
 
 `robot.tilt(...)` applies for a single control frame and the robot itself
-neutralizes it shortly after — this is not the deadman expiring a stale
-command, the tilt key simply has no expiry to begin with, and the robot
+neutralizes it shortly after. This is not the deadman expiring a stale
+command; the tilt key simply has no expiry to begin with, and the robot
 relaxes back to level on its own. Use it for a nudge, not a posture.
 
 `robot.hold_tilt(pitch_deg=10.0)` keeps re-asserting the setpoint at 10 Hz
-until `clear_tilt()` (or another `hold_tilt` call) changes it — this is what
+until `clear_tilt()` (or another `hold_tilt` call) changes it. This is what
 actually holds an orientation. `async with robot.tilting(...)` holds one for
 the duration of a block and restores whatever hold was active before it on
 exit, so nesting a temporary tilt inside a longer-running one returns to
@@ -95,7 +95,7 @@ that hold rather than dropping to level.
 ```{warning}
 The tilt key **bypasses the motion gateway** entirely: it is not arbitrated
 against another source, and it is not covered by the collision monitor or
-the deadman. Two nodes holding different tilts fight silently — there is no
+the deadman. Two nodes holding different tilts fight silently: there is no
 error, no rejection, just whichever one published most recently winning that
 frame. Coordinate tilt ownership yourself; the gateway will not do it for
 you.
@@ -105,13 +105,13 @@ you.
 
 Messages your handlers cause are traced automatically. A `put()`, a `call()`,
 a `spawn()`, or a `blocking()` invoked from inside a handler is linked back
-to whatever message caused that handler to run — no extra code required.
+to whatever message caused that handler to run, with no extra code required.
 
 A timer breaks this. The body of a periodic callback is caused by the clock,
 not by any incoming message, so anything it publishes starts a *new* trace
 with no link to whatever earlier message prompted the timer to be set up in
 the first place. The common shape that loses the link is sense, then act
-later via a timer — by the time the timer fires, the trace that started at
+later via a timer: by the time the timer fires, the trace that started at
 the sensor reading is gone.
 
 The fix is to capture the trace id when you still have it, and restore it
@@ -127,7 +127,7 @@ with trace.using(traceparent):
     self.outbound.put(derive_from(msg))
 ```
 
-`robot.driving()`'s republish pump is clock-driven the same way — prefer
+`robot.driving()`'s republish pump is clock-driven the same way, so prefer
 `robot.move()` called directly from inside a handler when the causal chain
 to that handler's trigger matters.
 
@@ -147,10 +147,10 @@ propagates under the hood.
 ## Checking whether you may move at all
 
 Arbitration, above, decides *who* wins when several sources want to drive.
-It says nothing about whether driving is permitted at all — that is a
+It says nothing about whether driving is permitted at all. That is a
 separate authority, and the call that asks it is
 `robot.motion_permitted(within=...)`: whether the safety system currently
-allows motion. A `False` result means wait, not error — a tripped e-stop, a
+allows motion. A `False` result means wait, not error: a tripped e-stop, a
 robot still mid-recovery, or a safety source that has gone silent all read as
 "not permitted." The call fails safe by design: if the safety latch stops
 arriving within the freshness window you gave it, that counts the same as it
@@ -166,20 +166,20 @@ mechanism, including how it differs from the collision zones covered above.
 
 Every earlier chapter shows up here:
 
-- Navigation tasks and handling every outcome — chapter 6, in `_drive_leg`'s
+- Navigation tasks and handling every outcome: chapter 6, in `_drive_leg`'s
   use of `navigate_to` and its check of `result.state`.
-- Motion permission and preemption — introduced above in this chapter, and
+- Motion permission and preemption: introduced above in this chapter, and
   applied together in the `motion_permitted` wait loop and the
   `preempted_by` check, both in `_drive_leg`.
-- Configuration — chapter 4, in `PatrolConfig(NodeConfig)` and its typed,
+- Configuration: chapter 4, in `PatrolConfig(NodeConfig)` and its typed,
   documented fields.
-- Tests against the harness, with no robot required — chapter 7; `Patrol`'s
+- Tests against the harness, with no robot required: chapter 7; `Patrol`'s
   own tests live alongside the rest of the guide's, in
   `tests/test_guide_examples.py`.
 
 It is meant to be modified, not just read. Two directions worth trying:
 
-- Add a `hold_tilt` "look around" at each corner — hold a yaw sweep for a
+- Add a `hold_tilt` "look around" at each corner: hold a yaw sweep for a
   second or two after each leg completes, then `clear_tilt()` before moving
   on.
 - Publish a `Detection` (chapter 8) when something is seen at a waypoint,
@@ -189,18 +189,18 @@ It is meant to be modified, not just read. Two directions worth trying:
 ## Splitting into several nodes
 
 One node per concern is the stack's own pattern, not a rule invented for
-this guide — the navigation coordinator, the safety node, and the gateway
+this guide: the navigation coordinator, the safety node, and the gateway
 are all separate processes, coupled only through the topics they share.
 Nothing stops your own project from following the same shape: split
 `Patrol` from a detector, or a detector from an alerter, and nothing about
 either node needs to change, because they were never coupled to each
-other's code — only to a topic both sides import.
+other's code, only to a topic both sides import.
 
 That means splitting is free. Both halves keep reading the same
 `zenode.toml`; each simply runs as its own `uv run` process, found by the
 other through the topics it publishes and subscribes to, exactly as
 `FakeStack` and your node are two separate objects under the test harness.
-The harness itself already starts several nodes together in one test — every
+The harness itself already starts several nodes together in one test: every
 test in this guide that calls `h.start_node` more than once has been doing
 exactly that since chapter 7.
 
@@ -208,8 +208,9 @@ exactly that since chapter 7.
 
 That's the guide. From here:
 
-- [Concepts](../concepts/index.md) — how the mechanisms you've been using
-  actually work underneath: the gateway, tracing, navigation, pub/sub.
-- [Reference](../reference/index.md) — every topic on the wire, every class
+- [Concepts](../concepts/index.md): how the mechanisms you've been using
+  actually work underneath, covering the gateway, tracing, navigation, and
+  pub/sub.
+- [Reference](../reference/index.md): every topic on the wire, every class
   and method, every exception, for lookup rather than reading start to
   finish.

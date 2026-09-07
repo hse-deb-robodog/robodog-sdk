@@ -19,7 +19,7 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
    [installation instructions](https://docs.astral.sh/uv/getting-started/installation/)
    for your platform.
 3. **Python 3.11 or newer.** If your system does not have one, you do not
-   need to install it separately — `uv python install 3.12` gets you a
+   need to install it separately: `uv python install 3.12` gets you a
    working interpreter that uv manages for you.
 
 ## Start the appliance
@@ -34,7 +34,7 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
    ```
 
    **What you should see:** Docker pulls the images the first time, then
-   starts three services — `zenoh-router`, `sim-stack`, `mola` — and the
+   starts three services (`zenoh-router`, `sim-stack`, `mola`), and the
    terminal fills with interleaved log lines from the simulation as it
    comes up. Leave this terminal running; the stack stops when you stop
    it.
@@ -85,7 +85,7 @@ If you are developing the control stack itself, or your platform can't run
 the published images, you can run the stack from source instead of Docker
 images. This requires access to the private
 [`hse-deb-algo-athlets/robodog-digipro`](https://github.com/hse-deb-algo-athlets/robodog-digipro)
-repository — ask your instructor for access. Once you have it, its
+repository; ask your instructor for access. Once you have it, its
 README/setup guide has the full instructions; the quick start is:
 `uv sync --all-extras` to install dependencies, copy
 `config/config.toml.example` to a working config file, start the Zenoh
@@ -95,13 +95,13 @@ to run the simulation itself.
 ```{warning}
 **Troubleshooting**
 
-- *Port 7447 already in use* — something else on your machine is already
+- *Port 7447 already in use:* something else on your machine is already
   listening on that port (perhaps a previous `docker compose up` you
   forgot was running). Stop it, or stop the other process, then try again.
-- *Docker Desktop not running* — `docker compose up` fails immediately
+- *Docker Desktop not running:* `docker compose up` fails immediately
   with a connection error. Start Docker Desktop and wait for it to report
   it is running, then retry.
-- *Viewer is black or empty* — give the simulation about 10 seconds to
+- *Viewer is black or empty:* give the simulation about 10 seconds to
   finish starting up after the log lines appear, then reload
   `http://localhost:8080`.
 ```

@@ -7,13 +7,13 @@ needs one id that follows the message across all of them.
 
 ## Where traces start
 
-A trace begins at the topics that begin a causal chain in the first place —
-`system_state/odometry` and `localization/pose` — sampled at 1%
+A trace begins at the topics that begin a causal chain in the first place
+(`system_state/odometry` and `localization/pose`), sampled at 1%
 (`robodog_sdk.topics.TRACE_RATIO`) so a 20 Hz stream does not record a span on
 every single frame. From there, everything a handler causes stays in the
 trace automatically: `put()`, `await self.call()`, `self.spawn()`, and
 `await self.blocking()` all propagate it. There is nothing to configure and
-no API to learn — the propagation is a property of calling those from inside
+no API to learn: the propagation is a property of calling those from inside
 a handler that is itself part of a trace.
 
 ## Service calls join, they do not start
@@ -30,7 +30,7 @@ uv run zenode logs --trace <id>    # every log record from that chain
 uv run zenode trace <id>           # the path it took, hop by hop
 ```
 
-Both work with nothing installed and no collector running — a trace id is
+Both work with nothing installed and no collector running: a trace id is
 Zenoh-level metadata, not something an OpenTelemetry backend has to be up to
 read. Span recording is optional (`zenode[otel]`) and adds detail beyond the
 id and the log records; without it a traced `put()` costs roughly 3.6 μs
@@ -88,11 +88,11 @@ trigger matters.
 ## Your own topics
 
 `trace=True` is yours to set on a `Topic` you declare, and it belongs on the
-one that *starts* a chain — add `trace_ratio=` alongside it to sample a
+one that *starts* a chain: add `trace_ratio=` alongside it to sample a
 continuous stream rather than record every frame. Marking a downstream topic
 `trace=True` as well is harmless: a topic starts a new trace only when none
 is already active, so a pipeline that is already inside a trace stays one
 trace regardless of how many of its topics are marked. The practical
 consequence is that `trace_ratio` only ever takes effect on whichever topic
-actually started the trace — a `trace_ratio` set on a downstream topic that
+actually started the trace: a `trace_ratio` set on a downstream topic that
 never gets to start one has nothing to act on.
