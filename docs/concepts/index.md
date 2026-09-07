@@ -6,4 +6,8 @@ want the full picture behind something you are using.
 
 ```{toctree}
 :maxdepth: 1
+
+architecture
+pubsub
+async-python
 ```

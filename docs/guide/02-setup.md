@@ -109,5 +109,5 @@ to run the simulation itself.
 ## Where to go next
 
 Continue to chapter 3, where you create your own project and write your
-first node. For the full map of processes and topics, see Architecture
-<!-- link when concepts/architecture.md exists -->.
+first node. For the full map of processes and topics, see
+[Architecture](../concepts/architecture.md).

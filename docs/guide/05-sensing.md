@@ -92,5 +92,5 @@ in a straight line and stops after covering about a meter.
 
 ## Where to go next
 
-Continue to chapter 6. For the mechanism behind subscriptions, see pub/sub
-<!-- link when concepts/pubsub.md exists -->.
+Continue to chapter 6. For the mechanism behind subscriptions, see
+[pub/sub](../concepts/pubsub.md).

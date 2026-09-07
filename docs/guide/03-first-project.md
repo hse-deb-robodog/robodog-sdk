@@ -74,11 +74,10 @@ is what you would use in the future to send this node its own configuration.
 
 `@subscribe(StateTopics.odometry, mode="latest")` registers `on_odometry` to
 be called whenever a new message arrives on the odometry topic. This is
-publish/subscribe — see pub/sub concepts
-<!-- link when concepts/pubsub.md exists --> for the full picture, but the
-short version is: nobody calls anybody else's functions directly, programs
-just publish messages on named topics and subscribe to the ones they care
-about. `mode="latest"` matters here — it means that if several odometry
+publish/subscribe — see [pub/sub concepts](../concepts/pubsub.md) for the
+full picture, but the short version is: nobody calls anybody else's
+functions directly, programs just publish messages on named topics and
+subscribe to the ones they care about. `mode="latest"` matters here — it means that if several odometry
 messages arrive faster than your handler processes them, only the newest one
 is delivered; the backlog is dropped. That is what you want for a live
 position: you care where the robot is *now*, not the history of everywhere
@@ -90,10 +89,9 @@ timers, talking to the network — all on a single thread, using an event
 loop. The loop only makes progress on the next thing once the current
 handler yields control back to it, so a handler that blocks (a long
 computation, a synchronous network call, `time.sleep`) freezes the entire
-node, not just itself. See asyncio essentials
-<!-- link when concepts/async-python.md exists --> for what that means in
-practice; for now, the rule is simple: keep handlers quick, and use `await`
-for anything that takes time.
+node, not just itself. See [asyncio essentials](../concepts/async-python.md)
+for what that means in practice; for now, the rule is simple: keep handlers
+quick, and use `await` for anything that takes time.
 
 ## Run it
 
@@ -125,6 +123,6 @@ the robot walks there.
 ## Where to go next
 
 Continue to chapter 4, where you send commands back to the robot instead of
-only reading its state. For the concepts touched on here, see pub/sub
-<!-- link when concepts/pubsub.md exists --> and asyncio essentials
-<!-- link when concepts/async-python.md exists -->.
+only reading its state. For the concepts touched on here, see
+[pub/sub](../concepts/pubsub.md) and
+[asyncio essentials](../concepts/async-python.md).

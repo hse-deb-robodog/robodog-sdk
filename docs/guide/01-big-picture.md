@@ -24,8 +24,8 @@ itself stays untouched.
 The processes talk to each other, and to you, over
 [Eclipse Zenoh](https://zenoh.io): each program publishes messages on named
 topics, and subscribes to the topics it cares about. Nobody calls anybody
-else's functions directly. See pub/sub concepts
-<!-- link when concepts/pubsub.md exists --> for how that works.
+else's functions directly. See [pub/sub concepts](../concepts/pubsub.md)
+for how that works.
 
 `robodog-sdk` — this package — is how your Python program joins that
 conversation. It knows every topic the stack exposes and every message type
@@ -68,5 +68,5 @@ already know.
 ## Where to go next
 
 Continue to chapter 2, where you bring up the simulated robot. For the full
-map of processes and topics, see Architecture
-<!-- link when concepts/architecture.md exists -->.
+map of processes and topics, see
+[Architecture](../concepts/architecture.md).
