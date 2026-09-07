@@ -3,6 +3,9 @@
 ```{toctree}
 :hidden:
 
+guide/index
+concepts/index
+reference/index
 driving
 navigation
 safety
