@@ -12,4 +12,5 @@ are new to the system, start at chapter 1.
 03-first-project
 04-driving
 05-sensing
+06-navigation
 ```

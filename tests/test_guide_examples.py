@@ -10,12 +10,14 @@ from __future__ import annotations
 import asyncio
 
 import first_node
+import goto
 import pytest
 import timed_drive
 import wanderer
 from zenode.testing import harness
 
-from robodog_sdk.testing import FakeStack
+from robodog_sdk import TaskState
+from robodog_sdk.testing import FakeNav, FakeStack
 
 pytestmark = pytest.mark.integration
 
@@ -66,3 +68,33 @@ async def test_wanderer_drives_until_the_distance_is_covered() -> None:
         stack.set_pose(x=2.0, y=0.0)  # past the target distance
         await asyncio.sleep(SETTLE)
         assert stack.stopped, "should stop once the distance is covered"
+
+
+async def test_goto_submits_the_goal_and_finishes() -> None:
+    async with harness() as h:
+        await h.start_node(FakeStack)
+        nav = await h.start_node(FakeNav)
+        await h.start_node(goto.Goto, config=goto.GotoConfig(x=2.0, y=0.5, timeout=5.0))
+
+        for _ in range(50):
+            if nav.goals:
+                break
+            await asyncio.sleep(0.05)
+
+        assert len(nav.goals) == 1, "exactly one goal should have been submitted"
+
+
+async def test_goto_reports_blocked_without_crashing() -> None:
+    async with harness() as h:
+        await h.start_node(FakeStack)
+        nav = await h.start_node(FakeNav)
+        nav.result_state = TaskState.BLOCKED
+        node = await h.start_node(goto.Goto, config=goto.GotoConfig(timeout=5.0))
+
+        for _ in range(50):
+            if node.result is not None:
+                break
+            await asyncio.sleep(0.05)
+
+        assert node.result is not None
+        assert node.result.state is TaskState.BLOCKED
