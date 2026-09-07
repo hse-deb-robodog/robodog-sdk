@@ -1,6 +1,6 @@
 """Send the robot somewhere and handle every way that can end.
 
-    uv run python examples/guide/goto.py
+    uv run python goto.py
 
 A navigation goal is a *task*: you submit it, the stack works on it, and it
 ends in exactly one of four states. Only SUCCEEDED means the robot arrived.

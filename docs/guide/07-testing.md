@@ -126,6 +126,11 @@ These are stand-ins, not physics — nothing moves, and no motor ever spins.
    └── pyproject.toml
    ```
 
+   In your own project, `my_node.py` is the `wanderer.py` you wrote in
+   chapter 5, and `test_my_node.py` imports it by its module name (`import
+   wanderer`) — the same way `tests/test_guide_examples.py` imports
+   `wanderer` in this repository.
+
 4. Run them:
 
    ```bash

@@ -1,6 +1,6 @@
 """Define your own topic and message type — the contract pattern, for you.
 
-    uv run python examples/guide/detections.py   # runs the detector
+    uv run python detections.py   # runs the detector
 
 Everything the SDK does for the stack's topics you can do for your own:
 a pydantic model as the payload schema, a Topic binding it to a key, and

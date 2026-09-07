@@ -1,6 +1,6 @@
 """Drive forward for a fixed time, then stop — the guide's first movement.
 
-uv run python examples/guide/timed_drive.py
+uv run python timed_drive.py
 """
 
 from __future__ import annotations

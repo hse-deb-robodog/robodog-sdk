@@ -1,6 +1,6 @@
 """Close the loop: drive forward until the robot has covered a distance.
 
-    uv run python examples/guide/wanderer.py
+    uv run python wanderer.py
 
 Publishing one command per odometry message keeps the command stream fresher
 than the 0.3 s expiry, so the deadman never trips while data flows — and if

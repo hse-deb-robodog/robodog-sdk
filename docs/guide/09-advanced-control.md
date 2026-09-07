@@ -1,15 +1,6 @@
 # Advanced control
 
 ```{note}
-An alternative capstone was considered for this chapter — a turtle-style
-shape-driving demo, tracing out a square or a figure-eight purely with
-`robot.driving()`. The patrol node below covers the same ground while also
-exercising tasks, config, and tests from earlier chapters, so it is what
-follows; the spec allows either, and the shape-driving demo can replace this
-section later if that reads better to a newcomer.
-```
-
-```{note}
 **In this chapter:** share the robot with other command sources; use
 postures; keep causality traceable; put it all together.
 ```
@@ -153,6 +144,20 @@ log records carrying that id.
 See [tracing concepts](../concepts/tracing.md) for how the trace id
 propagates under the hood.
 
+## Checking whether you may move at all
+
+Arbitration, above, decides *who* wins when several sources want to drive.
+It says nothing about whether driving is permitted at all — that is a
+separate authority, and the call that asks it is
+`robot.motion_permitted(within=...)`: whether the safety system currently
+allows motion. A `False` result means wait, not error — a tripped e-stop, a
+robot still mid-recovery, or a safety source that has gone silent all read as
+"not permitted." The call fails safe by design: if the safety latch stops
+arriving within the freshness window you gave it, that counts the same as it
+saying stopped, so a crashed safety node or a severed link can never be
+mistaken for permission. See [safety](../concepts/safety.md) for the full
+mechanism, including how it differs from the collision zones covered above.
+
 ## The capstone: a patrol node
 
 ```{literalinclude} ../../examples/guide/patrol.py
@@ -163,8 +168,9 @@ Every earlier chapter shows up here:
 
 - Navigation tasks and handling every outcome — chapter 6, in `_drive_leg`'s
   use of `navigate_to` and its check of `result.state`.
-- Motion permission and preemption — this chapter, in the `motion_permitted`
-  wait loop and the `preempted_by` check, both in `_drive_leg`.
+- Motion permission and preemption — introduced above in this chapter, and
+  applied together in the `motion_permitted` wait loop and the
+  `preempted_by` check, both in `_drive_leg`.
 - Configuration — chapter 4, in `PatrolConfig(NodeConfig)` and its typed,
   documented fields.
 - Tests against the harness, with no robot required — chapter 7; `Patrol`'s

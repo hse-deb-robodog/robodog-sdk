@@ -1,6 +1,6 @@
 """The guide's capstone: patrol a route, coexist with everything else.
 
-    uv run python examples/guide/patrol.py
+    uv run python patrol.py
 
 Everything from the guide in one node: navigation tasks in sequence, every
 outcome handled, motion permission checked, and preemption by a human driver

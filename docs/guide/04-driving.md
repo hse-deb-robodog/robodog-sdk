@@ -75,8 +75,8 @@ A few new pieces beyond chapter 3:
 `DriveConfig(NodeConfig)` is a typed configuration object. Its fields —
 `speed` and `duration` — get the defaults declared here unless something
 overrides them, which is what makes the same node reusable: run it as-is,
-or drop a `[timed-drive]` section into `zenode.toml` to change `speed` and
-`duration` without touching the code.
+or drop a `[node.timed-drive]` section into `zenode.toml` to change `speed`
+and `duration` without touching the code.
 
 `self.spawn(self._run(), name="drive")` starts `_run` as a background task
 owned by the node, rather than awaiting it inline in `on_start`. `on_start`
@@ -92,10 +92,10 @@ for any reason, the robot is sent a stop.
 
 ## Run it
 
-Run the node:
+Create `timed_drive.py` next to `first_node.py` with the code above, then:
 
 ```bash
-uv run python examples/guide/timed_drive.py
+uv run python timed_drive.py
 ```
 
 **What you should see:** in the simulation viewer from chapter 2, the robot

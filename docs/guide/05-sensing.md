@@ -70,10 +70,10 @@ when you need to react to *every* update as it arrives.
 
 ## Run it
 
-Run the node:
+Create `wanderer.py` next to `first_node.py` with the code above, then:
 
 ```bash
-uv run python examples/guide/wanderer.py
+uv run python wanderer.py
 ```
 
 **What you should see:** in the simulation viewer, the robot walks forward
