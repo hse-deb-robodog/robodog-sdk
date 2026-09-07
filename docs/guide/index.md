@@ -6,4 +6,6 @@ are new to the system, start at chapter 1.
 
 ```{toctree}
 :maxdepth: 1
+
+01-big-picture
 ```
