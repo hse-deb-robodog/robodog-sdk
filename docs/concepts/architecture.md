@@ -101,7 +101,7 @@ the identical node against hardware.
 ## Where each process's messages are specified
 
 The process roster above says what each process is for; it does not enumerate
-every field of every message. That lives in the topic reference
-<!-- link when reference/topics.md exists -->, generated from the same
+every field of every message. That lives in the
+[topic reference](../reference/topics.md), generated from the same
 `robodog_sdk.topics` declarations these processes publish and subscribe
 against.

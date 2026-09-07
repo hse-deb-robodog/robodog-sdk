@@ -5,4 +5,10 @@ package, and every exception you can encounter.
 
 ```{toctree}
 :maxdepth: 1
+
+topics
+client
+messages
+testing
+errors
 ```

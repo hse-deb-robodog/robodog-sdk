@@ -11,7 +11,6 @@ navigation
 safety
 tracing
 testing
-api/index
 ```
 
 **The wire contract for the Robodog control system — and the way to build on
@@ -38,7 +37,7 @@ and the packaging decision: ADR-010 in the robodog-digipro repository.
 | [Safety](safety.md) | The e-stop, `motion_permitted`, what software can and cannot do |
 | [Tracing](tracing.md) | Following one command across four processes |
 | [Testing](testing.md) | `FakeStack` and `FakeNav` — no router, no robot |
-| [API reference](api/index.rst) | Generated from the package docstrings |
+| [Reference](reference/index.md) | Every topic, the generated API docs, and the exceptions you can hit |
 
 ## Install
 

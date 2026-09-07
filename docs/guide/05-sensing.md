@@ -48,7 +48,7 @@ on the physical robot, and chapter 7 gives you a way to fake it locally with
 ```
 
 The full list of topics, with the message type and description for each,
-lives in the topic reference <!-- link when reference/topics.md exists -->.
+lives in the [topic reference](../reference/topics.md).
 
 ## Client state without subscribing
 
