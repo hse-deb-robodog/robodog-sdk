@@ -81,6 +81,9 @@ uv run pyright
 uv run --group docs sphinx-build -W docs docs/_build/html
 ```
 
+[CONTRIBUTING.md](CONTRIBUTING.md) covers when a change belongs in the SDK,
+how to make one, and how releases work.
+
 ## License
 
 Apache License 2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE).

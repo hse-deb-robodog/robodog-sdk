@@ -124,6 +124,40 @@ the robot walks there.
   receives nothing. Confirm the router from chapter 2 is still running, and
   run `uv run zenode nodes` to check that your node is actually connected.
 
+## Updating the SDK later
+
+Your project pins the SDK to a tag, so it never changes underneath you. When
+a new version comes out, updating is a deliberate step:
+
+1. Read the
+   [changelog](https://github.com/hse-deb-algo-athlets/robodog-sdk/blob/main/CHANGELOG.md)
+   for the new version first. It is written for exactly this moment: it tells
+   you what a bump costs you. The project uses semantic versioning, and while
+   the version is `0.x`, a minor release may move topic keys, so an update
+   can require changes in your code.
+
+2. Re-run the install command with the new tag:
+
+   ```bash
+   uv add "robodog-sdk @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v%%SDK_VERSION%%"
+   ```
+
+3. Run your tests (chapter 7) and start your node against the simulation
+   once. If a topic key moved, the symptom is the one you already know:
+   silence on a subscription, with no error.
+
+One more thing to keep in sync: the deployed control stack also speaks a
+specific contract version. After an update, your SDK and the stack you talk
+to must agree, or some topics go silent while others still work. If an update
+suddenly breaks only part of your node, ask whether the appliance image or
+the dog's stack has been updated to match. `robodog_sdk.CONTRACT_VERSION` is
+the version your code was built against; compare it with what your
+instructor says is deployed.
+
+You do not need to chase releases while your project is running fine. Update
+when a release note names something you need, or when your instructor asks
+everyone to move.
+
 ## Where to go next
 
 Continue to chapter 4, where you send commands back to the robot instead of
