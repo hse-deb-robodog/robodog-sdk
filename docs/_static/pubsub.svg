@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 880 560" role="img" aria-labelledby="robodog-pubsub-title robodog-pubsub-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="robodog-pubsub-title">Robodog pub/sub model</title>
+  <desc id="robodog-pubsub-desc">A topic key is the namespace from zenode.toml plus a relative key from the contract; a publisher puts messages on the key and any number of subscribers receive them without either side knowing the other; state topics stream the latest values while command topics expire after 0.3 seconds.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5f85"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#b6163d"/>
+    </marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#007ea6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+  <!-- Section A: key anatomy -->
+  <text x="40" y="52" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">THE KEY ON THE WIRE</text>
+  <rect x="196" y="68" width="124" height="40" rx="4" fill="#f0f0f0" stroke="rgba(25,48,88,0.30)" stroke-width="1"/>
+  <text x="258" y="92" fill="#193058" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">robodog</text>
+  <text x="332" y="92" fill="#7d8bab" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">/</text>
+  <rect x="344" y="68" width="280" height="40" rx="4" fill="#f0f0f0" stroke="rgba(25,48,88,0.30)" stroke-width="1"/>
+  <text x="484" y="92" fill="#193058" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">system_state/odometry</text>
+  <text x="258" y="128" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">namespace — zenode.toml</text>
+  <text x="484" y="128" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">topic key — the contract</text>
+
+  <!-- Section B connectors (before boxes) -->
+  <line x1="260" y1="280" x2="372" y2="280" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <rect x="292" y="252" width="28" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="306" y="261" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">PUT</text>
+  <path d="M 572,272 H 610 Q 618,272 618,264 V 232 Q 618,224 626,224 H 664" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 572,288 H 610 Q 618,288 618,296 V 328 Q 618,336 626,336 H 664" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- Section B nodes -->
+  <rect x="76" y="252" width="184" height="56" rx="6" fill="#f7f7f7"/>
+  <rect x="76" y="252" width="184" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="168" y="276" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bridge / Simulation</text>
+  <text x="168" y="294" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">publisher</text>
+
+  <rect x="372" y="248" width="200" height="64" rx="6" fill="#f7f7f7"/>
+  <rect x="372" y="248" width="200" height="64" rx="6" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="472" y="274" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Topic</text>
+  <text x="472" y="292" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">…/system_state/odometry</text>
+
+  <rect x="664" y="196" width="140" height="56" rx="6" fill="#f7f7f7"/>
+  <rect x="664" y="196" width="140" height="56" rx="6" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="734" y="220" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Your node</text>
+  <text x="734" y="238" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">@subscribe</text>
+
+  <rect x="664" y="308" width="140" height="56" rx="6" fill="#f7f7f7"/>
+  <rect x="664" y="308" width="140" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="734" y="332" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Another node</text>
+  <text x="734" y="350" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">@subscribe</text>
+
+  <!-- Editorial aside -->
+  <text x="76" y="392" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">Publisher and subscribers never know about each other — only the key connects them.</text>
+
+  <!-- Section C: two kinds of topics -->
+  <text x="40" y="440" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">TWO KINDS OF TOPICS</text>
+  <rect x="76" y="456" width="344" height="72" rx="6" fill="#f0f0f0" stroke="rgba(25,48,88,0.20)" stroke-width="1"/>
+  <text x="96" y="484" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif">State topics</text>
+  <text x="96" y="504" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace">a stream of latest values — odometry, battery, pose</text>
+  <rect x="460" y="456" width="344" height="72" rx="6" fill="#f0f0f0" stroke="rgba(25,48,88,0.20)" stroke-width="1"/>
+  <text x="480" y="484" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif">Command topics</text>
+  <text x="480" y="504" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace">expire after max_age = 0.3 s — the deadman</text>
+</svg>

@@ -30,7 +30,7 @@ nothing arrives. Run `uv run zenode nodes` to confirm your node is even
 connected in the first place.
 ```
 
-<!-- diagram: pubsub.svg inserted in the diagram task -->
+![Key anatomy, one publisher feeding a topic that fans out to decoupled subscribers, and the state-versus-command topic distinction](../_static/pubsub.svg)
 
 ## Latched topics
 

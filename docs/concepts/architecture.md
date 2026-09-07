@@ -86,7 +86,7 @@ submits a navigation task through the same coordinator and the same task
 lifecycle `robot.navigate_to(...)` uses from code — it is a client of the
 stack, not a special path into it.
 
-<!-- diagram: architecture.svg inserted in the diagram task -->
+![The Robodog control stack processes around the central Zenoh router, with your node joining from outside on the same topics](../_static/architecture.svg)
 
 ## The appliance and the dog are the same stack
 

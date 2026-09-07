@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your first node, step by step</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; padding: 2rem; background: #f7f7f7; font-family: 'Geist', sans-serif; color: #193058; }
+  .eyebrow { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #7d8bab; margin: 0 0 0.5rem; }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.75rem; margin: 0 0 1.5rem; }
+  svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<p class="eyebrow">ROBODOG-SDK · GUIDE CH. 3</p>
+<h1>Your first node, step by step</h1>
+<svg viewBox="0 0 880 464" role="img" aria-labelledby="robodog-firstnode-title robodog-firstnode-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="robodog-firstnode-title">First node startup sequence</title>
+  <desc id="robodog-firstnode-desc">Running first_node.py starts the node, which subscribes to the odometry topic at the Zenoh router; for every odometry sample the simulation publishes, the router delivers the message to the node and its handler logs the robot's position.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5f85"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#b6163d"/>
+    </marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#007ea6"/>
+    </marker>
+    <marker id="arrow-open" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polyline points="0 0, 8 3, 0 6" fill="none" stroke="#4a5f85" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+  <!-- Actors -->
+  <rect x="60" y="40" width="160" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="140" y="60" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">You</text>
+  <text x="140" y="76" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">terminal</text>
+  <rect x="276" y="40" width="160" height="48" rx="6" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="356" y="60" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">first-node</text>
+  <text x="356" y="76" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">your code</text>
+  <rect x="492" y="40" width="160" height="48" rx="6" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="572" y="60" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Zenoh router</text>
+  <text x="572" y="76" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">tcp/7447</text>
+  <rect x="708" y="40" width="160" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="788" y="60" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Simulation</text>
+  <text x="788" y="76" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">docker compose</text>
+
+  <!-- Lifelines -->
+  <line x1="140" y1="88" x2="140" y2="384" stroke="rgba(25,48,88,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="356" y1="88" x2="356" y2="384" stroke="rgba(25,48,88,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="572" y1="88" x2="572" y2="384" stroke="rgba(25,48,88,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="788" y1="88" x2="788" y2="384" stroke="rgba(25,48,88,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Loop fragment frame -->
+  <rect x="332" y="196" width="480" height="104" rx="4" fill="rgba(25,48,88,0.02)" stroke="rgba(25,48,88,0.22)" stroke-width="1"/>
+  <rect x="332" y="196" width="40" height="16" rx="2" fill="#f7f7f7" stroke="rgba(25,48,88,0.22)" stroke-width="1"/>
+  <text x="352" y="208" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">LOOP</text>
+  <text x="344" y="224" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">[every odometry sample]</text>
+
+  <!-- Activation bars -->
+  <rect x="352" y="128" width="8" height="216" fill="rgba(25,48,88,0.06)" stroke="#4a5f85" stroke-width="0.8"/>
+  <rect x="568" y="164" width="8" height="104" fill="rgba(25,48,88,0.06)" stroke="#4a5f85" stroke-width="0.8"/>
+
+  <!-- Messages -->
+  <line x1="140" y1="128" x2="352" y2="128" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <rect x="164" y="108" width="164" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="246" y="117" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">uv run python first_node.py</text>
+
+  <line x1="360" y1="168" x2="568" y2="168" stroke="#007ea6" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <rect x="380" y="148" width="168" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="464" y="157" fill="#007ea6" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">SUBSCRIBE system_state/odometry</text>
+
+  <line x1="788" y1="248" x2="576" y2="248" stroke="#4a5f85" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-open)"/>
+  <rect x="632" y="228" width="100" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="682" y="237" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">PUB odometry</text>
+
+  <line x1="568" y1="280" x2="360" y2="280" stroke="#b6163d" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+  <rect x="416" y="260" width="96" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="464" y="269" fill="#b6163d" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">on_odometry(msg)</text>
+
+  <path d="M 360,312 H 404 Q 412,312 412,320 V 328 Q 412,336 404,336 H 364" fill="none" stroke="#4a5f85" stroke-width="1" marker-end="url(#arrow)"/>
+  <text x="424" y="328" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">handler runs · logs x, y</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="416" x2="840" y2="416" stroke="rgba(25,48,88,0.10)" stroke-width="0.8"/>
+  <text x="40" y="440" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+  <line x1="120" y1="436" x2="152" y2="436" stroke="#4a5f85" stroke-width="1.2"/>
+  <text x="160" y="440" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">CALL</text>
+  <line x1="240" y1="436" x2="272" y2="436" stroke="#4a5f85" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="280" y="440" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">EVENT STREAM</text>
+  <line x1="400" y1="436" x2="432" y2="436" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="440" y="440" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">YOUR HANDLER RUNS</text>
+</svg>
+</body>
+</html>

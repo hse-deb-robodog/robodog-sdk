@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 640" role="img" aria-labelledby="robodog-architecture-title robodog-architecture-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="robodog-architecture-title">Robodog system architecture</title>
+  <desc id="robodog-architecture-desc">The Robodog control stack — bridge or simulation, motion gateway, safety, navigation, MOLA SLAM, system-state and operator tools — exchanges every message through a central Zenoh router; your node joins the same conversation from outside the stack using the same topics and rules.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5f85"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#b6163d"/>
+    </marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#007ea6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+  <!-- Zone: the control stack (drawn first) -->
+  <rect x="40" y="40" width="880" height="240" rx="8" fill="rgba(25,48,88,0.02)" stroke="rgba(25,48,88,0.10)" stroke-width="0.8"/>
+  <rect x="56" y="44" width="424" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="60" y="53" fill="rgba(25,48,88,0.40)" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em">CONTROL STACK — JETSON ON THE DOG, OR THE COMPOSE APPLIANCE ON YOUR LAPTOP</text>
+
+  <!-- Connectors (drawn before boxes) -->
+  <!-- Stack zone <-> router: one trunk, no direction (pub/sub both ways) -->
+  <line x1="480" y1="280" x2="480" y2="360" stroke="#4a5f85" stroke-width="1.2"/>
+  <rect x="492" y="308" width="60" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="496" y="317" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">PUB · SUB</text>
+
+  <!-- Your node -> router -->
+  <path d="M 176,488 V 400 Q 176,392 184,392 H 360" fill="none" stroke="#b6163d" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+  <rect x="196" y="366" width="152" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="272" y="375" fill="#b6163d" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SAME TOPICS · SAME RULES</text>
+
+  <!-- Row A: stack processes -->
+  <g>
+    <rect x="76" y="88" width="184" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="76" y="88" width="184" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="168" y="112" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bridge / Simulation</text>
+    <text x="168" y="130" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">system_state/* · sensors/*</text>
+  </g>
+  <g>
+    <rect x="284" y="88" width="184" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="284" y="88" width="184" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="376" y="112" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Motion gateway</text>
+    <text x="376" y="130" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">command/motion/*</text>
+  </g>
+  <g>
+    <rect x="492" y="88" width="184" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="492" y="88" width="184" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="584" y="112" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Safety</text>
+    <text x="584" y="130" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">safety/*</text>
+  </g>
+  <g>
+    <rect x="700" y="88" width="184" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="700" y="88" width="184" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="792" y="112" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Navigation</text>
+    <text x="792" y="130" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">nav/*</text>
+  </g>
+  <!-- Row B -->
+  <g>
+    <rect x="140" y="184" width="200" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="140" y="184" width="200" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="240" y="208" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">MOLA SLAM</text>
+    <text x="240" y="226" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">localization/* · map/grid</text>
+  </g>
+  <g>
+    <rect x="380" y="184" width="200" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="380" y="184" width="200" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="480" y="208" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">System state</text>
+    <text x="480" y="226" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">system_state/system</text>
+  </g>
+  <g>
+    <rect x="620" y="184" width="200" height="56" rx="6" fill="#f7f7f7"/>
+    <rect x="620" y="184" width="200" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+    <text x="720" y="208" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Operator tools</text>
+    <text x="720" y="226" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">joy · nav web UI</text>
+  </g>
+
+  <!-- Router (store treatment) -->
+  <rect x="360" y="360" width="240" height="64" rx="6" fill="#f7f7f7"/>
+  <rect x="360" y="360" width="240" height="64" rx="6" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="480" y="388" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Zenoh router</text>
+  <text x="480" y="406" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">tcp/localhost:7447</text>
+
+  <!-- Your node (focal) -->
+  <rect x="76" y="488" width="200" height="64" rx="6" fill="#f7f7f7"/>
+  <rect x="76" y="488" width="200" height="64" rx="6" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="176" y="516" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Your node</text>
+  <text x="176" y="534" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">your project · robodog-sdk</text>
+
+  <!-- Editorial aside -->
+  <text x="360" y="504" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">The appliance on your laptop and the Jetson on the dog run the same</text>
+  <text x="360" y="524" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">processes — your code cannot tell them apart.</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="584" x2="920" y2="584" stroke="rgba(25,48,88,0.10)" stroke-width="0.8"/>
+  <text x="40" y="608" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+  <rect x="120" y="600" width="12" height="12" rx="2" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="140" y="609" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">STACK PROCESS</text>
+  <rect x="280" y="600" width="12" height="12" rx="2" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="300" y="609" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">MESSAGE ROUTER</text>
+  <rect x="440" y="600" width="12" height="12" rx="2" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1"/>
+  <text x="460" y="609" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace">YOUR CODE</text>
+</svg>

@@ -93,6 +93,10 @@ node, not just itself. See [asyncio essentials](../concepts/async-python.md)
 for what that means in practice; for now, the rule is simple: keep handlers
 quick, and use `await` for anything that takes time.
 
+Here is the whole flow you just built, from `uv run` to the first log line:
+
+![Sequence of the first node starting: uv run starts the node, it subscribes at the router, and every odometry sample the simulation publishes is delivered to the handler, which logs the position](../_static/first-node-sequence.svg)
+
 ## Run it
 
 Run the node:

@@ -33,7 +33,7 @@ that travels on it, and it provides `RobotClient`, an object with methods for
 the operations you will use most: driving, reading state, sending navigation
 goals.
 
-<!-- diagram: architecture.svg inserted in the diagram task -->
+![The Robodog control stack processes around the central Zenoh router, with your node joining from outside on the same topics](../_static/architecture.svg)
 
 ## The simulation is the same robot
 

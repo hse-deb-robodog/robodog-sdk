@@ -96,4 +96,4 @@ tutorial — `asyncio.get_event_loop()`, manual `run_until_complete`, a
 for you, and adding your own on top of it is the most common way to end up
 with two event loops fighting over the same node.
 
-<!-- diagram: first-node-sequence.svg inserted in the diagram task -->
+![Sequence of the first node starting: uv run starts the node, it subscribes at the router, and every odometry sample the simulation publishes is delivered to the handler, which logs the position](../_static/first-node-sequence.svg)
