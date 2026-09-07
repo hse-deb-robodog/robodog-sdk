@@ -58,13 +58,12 @@ Working through this guide in order, you will:
 - Chapter 6: send the robot to a goal and handle how navigation ends.
 - Chapter 7: test your node without a robot or a simulation running.
 - Chapter 8: define your own topics and message types.
-- Chapter 9: combine everything into a multi-node project.
+- Chapter 9: share the robot with other command sources, use postures and
+  tracing, and build a capstone patrol node.
 
-```{tip}
 Each chapter builds on the last. If something assumes a piece you have not
 read yet, it is in an earlier chapter, not something you are expected to
 already know.
-```
 
 ## Where to go next
 
