@@ -16,7 +16,7 @@ import timed_drive
 import wanderer
 from zenode.testing import harness
 
-from robodog_sdk import TaskState
+from robodog_sdk import BatteryLevel, TaskState
 from robodog_sdk.testing import FakeNav, FakeStack
 
 pytestmark = pytest.mark.integration
@@ -82,6 +82,24 @@ async def test_goto_submits_the_goal_and_finishes() -> None:
             await asyncio.sleep(0.05)
 
         assert len(nav.goals) == 1, "exactly one goal should have been submitted"
+
+
+async def test_wanderer_survives_a_battery_scare() -> None:
+    """The chapter-7 showcase: fake state no desk can produce for real."""
+    async with harness() as h:
+        stack = await h.start_node(FakeStack)
+        await h.start_node(
+            wanderer.Wanderer,
+            config=wanderer.WanderConfig(speed=0.3, distance=5.0),
+        )
+
+        stack.set_pose(x=0.0, y=0.0)
+        stack.set_battery(soc=5, level=BatteryLevel.critical)
+        await asyncio.sleep(SETTLE)
+
+        # Wanderer ignores battery by design — the point is that YOUR node
+        # can now see a critical battery without draining one.
+        assert stack.last_command is not None, "still driving; battery was observable"
 
 
 async def test_goto_reports_blocked_without_crashing() -> None:

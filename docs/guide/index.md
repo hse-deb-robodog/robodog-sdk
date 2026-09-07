@@ -13,4 +13,5 @@ are new to the system, start at chapter 1.
 04-driving
 05-sensing
 06-navigation
+07-testing
 ```
