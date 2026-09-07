@@ -56,9 +56,16 @@ Three pieces, each doing one job:
 `Topic` takes the same options regardless of who declares it — you have seen
 several of them already, on the stack's own topics:
 
-- **`latched=True`** — a late subscriber gets the last published value
-  immediately, instead of waiting for the next change. Right for state that
-  should always have a current answer (compare `StateTopics.highstate`).
+- **`latched=True`** — declares that a late subscriber should get the last
+  published value instead of waiting for the next change. For a topic *your*
+  node publishes, zenode delivers on that: publishing and subscribing through
+  the SDK (as every example in this guide does) backs the topic with zenoh's
+  advanced pub/sub, which caches the last value and replays it to a late
+  joiner automatically — no extra code on either end. Right for state that
+  should always have a current answer. The stack's *own* producers don't all
+  take that path yet, so not every stack topic that declares `latched=True`
+  delivers on it today; see [pub/sub](../concepts/pubsub.md#latched-topics)
+  for which ones do.
 - **`max_age=`** — subscribers drop samples older than this many seconds.
   Right for commands that must be fresh, where an old value is worse than no
   value (compare `MotionTopics.request`).
