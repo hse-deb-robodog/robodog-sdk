@@ -61,9 +61,8 @@ Working through this guide in order, you will:
 - Chapter 9: share the robot with other command sources, use postures and
   tracing, and build a capstone patrol node.
 
-Each chapter builds on the last. If something assumes a piece you have not
-read yet, it is in an earlier chapter, not something you are expected to
-already know.
+Each chapter builds on the last, so anything a chapter assumes was covered
+in an earlier one.
 
 ## Where to go next
 

@@ -1,9 +1,9 @@
 # Tracing
 
-Every node you write is traced without you asking for it, and that is the
-point: when a command spans four processes and nothing moves, the question is
-not which process is broken but which one dropped the chain, and answering it
-needs one id that follows the message across all of them.
+Every node you write is traced without you asking for it. When a command
+spans four processes and nothing moves, the question is which process
+dropped the chain, and answering it needs one id that follows the message
+across all of them.
 
 ## Where traces start
 
@@ -73,7 +73,7 @@ async def tick(self):
         self.cmd.put(...)
 ```
 
-`examples/contract_drive.py` does exactly this: `on_odometry` stashes
+`examples/contract_drive.py` does this: `on_odometry` stashes
 `trace.current()` into `self._pose_trace` on every pose, and `tick` wraps its
 `put()` in `with trace.using(self._pose_trace):` so the command it publishes
 stays linked to the measurement that produced it, even though `tick` itself

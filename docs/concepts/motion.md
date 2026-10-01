@@ -26,16 +26,16 @@ cmd.put(MovementCommand(x=0.3))
 ```
 
 `RobotClient` sends the same message, on the same key, at the same priority.
-It is a convenience facade over the contract (`robot.move(x=0.3)` builds and
-publishes that identical `MovementCommand`), not a privileged channel into
-the gateway. Nothing it does is reachable only through it.
+It is a convenience facade over the contract: `robot.move(x=0.3)` builds and
+publishes that identical `MovementCommand`. Nothing it does is reachable
+only through it.
 
-Dropping to the contract directly is a fully supported choice, not an escape
-hatch. `examples/client_drive.py` and `examples/contract_drive.py` drive the
-same fixed distance, one against `RobotClient` and one against
-`MotionTopics`/`MovementCommand` directly; diffing the two shows exactly what
-the client adds (republishing, a typed `state` view, `preempted_by`), and
-that none of it is required to command the robot.
+Publishing to the contract directly is fully supported.
+`examples/client_drive.py` and `examples/contract_drive.py` drive the same
+fixed distance, one against `RobotClient` and one against
+`MotionTopics`/`MovementCommand` directly; diffing the two shows what the
+client adds (republishing, a typed `state` view, `preempted_by`), and that
+none of it is required to command the robot.
 
 ## The deadman
 
@@ -72,12 +72,12 @@ command whose `MovementSource` ranks highest, lowest to highest:
 autonomous < planner < assisted_teleop < controller
 ```
 
-Nothing is acquired and nothing is released. Priority rides on every single
-frame, so preemption and its resolution both fall out of that, for free: a
-higher-ranking command starts winning the instant it appears, and a
-lower-ranking one that keeps publishing resumes automatically the moment the
-higher one falls silent. There is no lock to give back and no message that
-says "I'm done now."
+Nothing is acquired and nothing is released. Priority rides on every frame,
+so preemption and its resolution both follow from that: a higher-ranking
+command starts winning the instant it appears, and a lower-ranking one that
+keeps publishing resumes automatically the moment the higher one falls
+silent. There is no lock to give back and no message that says "I'm done
+now."
 
 `MovementCommand.source` defaults to `autonomous`, the lowest rank, which is
 also the correct default for code you write: it is the one rank that cannot
@@ -87,10 +87,9 @@ take the robot away from a human by accident.
 Setting a higher `source` is not a way to win the arbitration: it is a claim
 to *be* that source. `controller` means "a human is holding the gamepad right
 now"; `assisted_teleop` means "human intent, shaped by a skill." Pass one only
-if your process genuinely is that thing. Claiming `controller` from an
-autonomous routine does not make your commands more important: it makes a
-real human's gamepad input stop reliably outranking you, which is the entire
-point of the ranking.
+if your process is that thing. Claiming `controller` from an autonomous
+routine means a real human's gamepad input no longer reliably outranks you,
+which defeats the point of the ranking.
 ```
 
 ## The gateway's own report
@@ -100,8 +99,8 @@ The gateway publishes its own decision on `motion/gateway/status`:
 collision monitor did to that command), `active_zones` (which zones caused
 it), and `watchdog_tripped` (the active source went silent and the gateway is
 holding the robot at zero until it speaks again). This is the first thing to
-read when a command goes out and the robot does not move: it names the
-reason instead of leaving you to guess.
+read when a command goes out and the robot does not move, because it names
+the reason.
 
 It is published on every change and re-asserted on its own regardless, about
 once a second. That heartbeat is what makes its age meaningful: a status that
@@ -141,10 +140,10 @@ Tilt does not go through any of the above. `robot.tilt(...)` and
 arbitration between sources, no collision-zone cover, and no deadman: the
 tilt key carries no `max_age` at all.
 
-A single `robot.tilt(pitch_deg=10)` lasts exactly one control frame; the
-robot itself relaxes back to neutral afterward; nothing on the wire expires
-it. That makes it a nudge, not a posture. `robot.hold_tilt(...)` is what
-holds one: it starts a background task that re-asserts the setpoint at 10 Hz
+A single `robot.tilt(pitch_deg=10)` lasts one control frame; the robot
+itself relaxes back to neutral afterward, and nothing on the wire expires
+it. It is a nudge. `robot.hold_tilt(...)` is what holds a posture: it
+starts a background task that re-asserts the setpoint at 10 Hz
 (`TILT_RATE_HZ`) until it is changed or cleared. While the held setpoint is
 exactly zero, the pump publishes nothing at all; `robot.clear_tilt()` (which
 is `hold_tilt()` with every angle at its default) stops the pump and sends

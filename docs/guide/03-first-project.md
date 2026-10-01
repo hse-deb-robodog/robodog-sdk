@@ -45,7 +45,7 @@ else about your code changes.
 `namespace` matters more than it looks: every topic key the SDK uses is
 prefixed with it on the wire, and the appliance you brought up in chapter 2
 is deployed under `robodog`. Get this value wrong and there is no error:
-your node starts, connects, and simply never receives anything.
+your node starts, connects, and never receives anything.
 
 ```{warning}
 **If your node never sees any data:** check `namespace = "robodog"` in
@@ -77,11 +77,10 @@ be called whenever a new message arrives on the odometry topic. This is
 publish/subscribe (see [pub/sub concepts](../concepts/pubsub.md) for the
 full picture), but the short version is: nobody calls anybody else's
 functions directly, programs just publish messages on named topics and
-subscribe to the ones they care about. `mode="latest"` matters here: it means that if several odometry
-messages arrive faster than your handler processes them, only the newest one
-is delivered, and the backlog is dropped. That is what you want for a live
-position: you care where the robot is *now*, not the history of everywhere
-it has been.
+subscribe to the ones they care about. `mode="latest"` matters here: if
+several odometry messages arrive faster than your handler processes them,
+only the newest one is delivered, and the backlog is dropped. That is what
+you want for a live position, since you care where the robot is right now.
 
 `on_odometry` is `async def`. Every handler in zenode is a coroutine, because
 a node does many things concurrently: reading multiple topics, running
@@ -120,8 +119,8 @@ the robot walks there.
 ## Troubleshooting
 
 - **No log lines appear at all.** Check `zenode.toml`. The most common cause
-  is `namespace` not set to `"robodog"`, which connects successfully but
-  receives nothing. Confirm the router from chapter 2 is still running, and
+  is `namespace` not set to `"robodog"`, which connects fine but receives
+  nothing. Confirm the router from chapter 2 is still running, and
   run `uv run zenode nodes` to check that your node is actually connected.
 
 ## Updating the SDK later
@@ -131,8 +130,8 @@ a new version comes out, updating is a deliberate step:
 
 1. Read the
    [changelog](https://github.com/hse-deb-robodog/robodog-sdk/blob/main/CHANGELOG.md)
-   for the new version first. It is written for exactly this moment: it tells
-   you what a bump costs you. The project uses semantic versioning, and while
+   for the new version first. It tells you what a bump costs you. The
+   project uses semantic versioning, and while
    the version is `0.x`, a minor release may move topic keys, so an update
    can require changes in your code.
 

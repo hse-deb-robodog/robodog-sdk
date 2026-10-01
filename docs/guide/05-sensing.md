@@ -8,7 +8,7 @@ know which state topics exist.
 Prerequisites: chapters 3-4, with a project that subscribes to
 odometry and a node that drives the robot.
 
-## Sense, decide, act — in the handler
+## Sense, decide and act in the handler
 
 ```{literalinclude} ../../examples/guide/wanderer.py
 :language: python
@@ -52,9 +52,9 @@ lives in the [topic reference](../reference/topics.md).
 
 ## Client state without subscribing
 
-Subscribing directly, as `wanderer.py` does, is one way to get state. It is
-not the only way: `RobotClient` already subscribes to the topics that
-matter most, and keeps the latest value of each on `robot.state`.
+Subscribing directly, as `wanderer.py` does, is one way to get state.
+`RobotClient` also subscribes to the topics that matter most on its own,
+and keeps the latest value of each on `robot.state`.
 
 ```python
 robot.state.odometry.value  # the latest OdometryState, or None
@@ -84,11 +84,10 @@ in a straight line and stops after covering about a meter.
 - **The handler never fires.** Same checklist as earlier chapters: confirm
   `namespace = "robodog"` in `zenode.toml`, and that the simulation from
   chapter 2 is still running.
-- **The robot creeps a little past the line before stopping.** That's real
-  robot dynamics (braking distance), not a bug in the node. The command to
-  halt is sent the instant `msg.x` crosses `distance`; covering the last bit
-  of ground before it actually comes to rest is physics, not lag in your
-  code.
+- **The robot creeps a little past the line before stopping.** That is
+  braking distance. The command to halt is sent the instant `msg.x` crosses
+  `distance`, and the robot covers the last bit of ground while it comes to
+  rest.
 
 ## Where to go next
 

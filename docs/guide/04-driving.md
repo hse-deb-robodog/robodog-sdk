@@ -34,12 +34,12 @@ seconds. The motion gateway checks the timestamp on each command it
 receives, and if the newest one it has is older than that, it stops the
 robot, regardless of what the command said.
 
-This is a safety feature, not a quirk: if your program stops publishing
-(it crashes, hits a breakpoint, or loses the network), the robot stops within
-0.3 seconds of the last thing you told it. There is no code path that leaves
-the robot coasting on a stale instruction.
+This is deliberate: if your program stops publishing (it crashes, hits a
+breakpoint, or loses the network), the robot stops within 0.3 seconds of
+the last thing you told it. There is no code path that leaves the robot
+coasting on a stale instruction.
 
-The direct consequence is that a single call doesn't keep the robot moving:
+The consequence is that a single call doesn't keep the robot moving:
 
 ```python
 self.robot.move(x=0.3)  # drives forward for about 300 ms, then stops
@@ -60,8 +60,8 @@ Command age is measured across machines: the timestamp is set on your
 laptop and checked on the robot's Jetson (or, in simulation, by the
 gateway process). If the two clocks disagree by more than a fraction of a
 second, every command looks stale the moment it arrives and the robot
-ignores you, with no error on your side. Keep clocks NTP-synchronized;
-this is a classic first thing to check when nothing moves.
+ignores you, with no error on your side. Keep clocks NTP-synchronized.
+Clock drift is one of the first things to check when nothing moves.
 ```
 
 ## A node that drives
@@ -105,11 +105,11 @@ once `_run` finishes.
 ## Speed limits are enforced in your process
 
 `MovementCommand` validates every value you give it against the robot's
-real capability envelope. Pass a speed outside that range and
+capability envelope. Pass a speed outside that range and
 `self.robot.move(...)` (or `driving(...)`) raises `pydantic.ValidationError`
-immediately, at the call site, before anything is sent over the network,
-let alone reaches the robot. There is no need to guess safe values or clamp
-them yourself; an out-of-range command simply never leaves your process.
+at the call site, before anything is sent over the network. You do not need
+to guess safe values or clamp them yourself; an out-of-range command never
+leaves your process.
 
 ## Troubleshooting
 

@@ -18,16 +18,15 @@ addressed by that string alone, though. The `namespace` set in your
 travels as `robodog/system_state/odometry`.
 
 The deployment you are talking to (appliance or dog, it makes no
-difference) is fixed at `robodog`. That is not a placeholder you are meant
-to change; it is the one value that currently addresses the stack at all.
+difference) is fixed at `robodog`. Do not change that value; it is currently
+the only one that addresses the stack at all.
 
 ```{warning}
 Get the namespace wrong and there is no error. Your node starts, connects to
-the router successfully, and simply never sees a message: it is
-subscribing to a prefix nothing publishes under. Silence, not an exception,
-is the failure mode, which is why it is the first thing to check when
-nothing arrives. Run `uv run zenode nodes` to confirm your node is even
-connected in the first place.
+the router, and never sees a message: it is subscribing to a prefix nothing
+publishes under. The failure mode is silence, which is why it is the first
+thing to check when nothing arrives. Run `uv run zenode nodes` to confirm
+your node is connected in the first place.
 ```
 
 ![Key anatomy, one publisher feeding a topic that fans out to decoupled subscribers, and the state-versus-command topic distinction](../_static/pubsub.svg)
@@ -86,15 +85,14 @@ moment it arrives, with nothing in the failure to say why.
 ## Services
 
 Not everything is a broadcast. Submitting a navigation task, or asking for
-one task's status, is a request that expects exactly one reply: you want an
-answer to *your* question, not everyone's opinion. Zenode calls this
+one task's status, is a request that expects one reply. Zenode calls this
 pattern a service, and the stack uses it wherever the interaction is
-genuinely request/response rather than an ongoing stream.
+request/response rather than an ongoing stream.
 
 You will not usually declare or call a service directly. `RobotClient`
 wraps the ones a typical node needs (`navigate_to`, `task_status`) behind
 plain `async` methods, so from your code a service call reads like any other
-`await`, not like a second API to learn on top of pub/sub.
+`await`.
 
 ## Seeing the wire
 
@@ -115,8 +113,8 @@ depths, handler latency, the numbers behind "how well is a node doing", not
 just whether it is up.
 
 `robodog_sdk.CONTRACT_VERSION` (in `robodog_sdk/__init__.py`, tracking the
-package version) exists precisely so your project and the deployed stack can
-be compared for a version skew. It is not part of the health heartbeat
+package version) exists so your project and the deployed stack can be
+compared for a version skew. It is not part of the health heartbeat
 today. `zenode health` reports node identity and traffic counters, nothing
 about which contract version produced them.
 

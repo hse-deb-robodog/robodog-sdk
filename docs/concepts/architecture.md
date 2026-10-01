@@ -23,9 +23,9 @@ gateway decides, this is the process that turns it into leg motion.
 
 The simulation covers the same motion and sensor surface (the same
 odometry, the same camera and LiDAR topics) but not `system_state/battery`.
-There is no battery to model in physics, so the key simply carries nothing
-while you run against the simulation; code that reads it only sees real
-values against the physical dog.
+There is no battery to model in physics, so the key carries nothing while
+you run against the simulation; code that reads it only sees real values
+against the physical dog.
 
 ### Motion gateway
 
@@ -41,7 +41,7 @@ It never originates a command of its own; it only arbitrates and forwards.
 
 Owns the emergency-stop decision. It aggregates every physical and software
 stop source into one authority, `safety/state`, republished on a heartbeat as
-well as on every change so a dropped packet costs a tick, not the truth. A
+well as on every change, so a dropped packet only delays the next update. A
 legacy edge-triggered mirror of the same latch exists for older consumers,
 but `safety/state` is the one to read. The e-stop shim is the piece that
 turns a physical button or software cancel into that shared state.
@@ -83,8 +83,8 @@ touches the stick, with no lock to take and nothing to hand back.
 
 The browser page you opened in chapter 2. Clicking a point on its map
 submits a navigation task through the same coordinator and the same task
-lifecycle `robot.navigate_to(...)` uses from code. It is a client of the
-stack, not a special path into it.
+lifecycle `robot.navigate_to(...)` uses from code. It is an ordinary client
+of the stack.
 
 ![The Robodog control stack processes around the central Zenoh router, with your node joining from outside on the same topics](../_static/architecture.svg)
 
@@ -94,9 +94,9 @@ The appliance you brought up in chapter 2 and the Jetson riding on the dog's
 back run the same processes, publishing and subscribing to the same topics
 under the same namespace. Nothing in your code can tell them apart, and
 nothing is supposed to: you point `zenode.toml` at a different address and
-everything else about your program is unchanged. That is the property the
-whole guide leans on: you develop and test against the simulation, then run
-the identical node against hardware.
+everything else about your program is unchanged. The whole guide relies on
+that: you develop and test against the simulation, then run the identical
+node against hardware.
 
 ## Where each process's messages are specified
 

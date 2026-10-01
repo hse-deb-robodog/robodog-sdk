@@ -33,15 +33,13 @@ result key, means the skill actually gave up.
 
 A task ends in exactly one of four terminal `TaskState` values:
 
-- **`SUCCEEDED`**. The goal was reached. The only outcome that means arrival.
-- **`BLOCKED`**. The skill met the world and stopped: an obstacle that never
-  cleared, no plan through the map, no forward progress. This is an
-  *outcome*, not an error: nothing is wrong with the robot, and retrying
-  later or from elsewhere may well work.
-- **`FAILED`**. The skill could not carry the goal out for a reason that
-  is not the world pushing back: no pose source, no map, an unhandled error.
-- **`CANCELED`**. A client cancelled the task, or another submit preempted
-  it.
+- `SUCCEEDED`: the goal was reached. The only outcome that means arrival.
+- `BLOCKED`: the skill met the world and stopped: an obstacle that never
+  cleared, no plan through the map, no forward progress. Nothing is wrong
+  with the robot, and retrying later or from elsewhere may well work.
+- `FAILED`: the skill could not carry the goal out for a reason other than
+  the world pushing back: no pose source, no map, an unhandled error.
+- `CANCELED`: a client cancelled the task, or another submit preempted it.
 
 Check `result.state` (or the `result.succeeded` shortcut for the first case)
 rather than assuming a return from `navigate_to` means arrival.
@@ -73,10 +71,10 @@ answers `TaskState.RUNNING` the same as feedback would), it returns a real
 outcome, the same as you would for feedback.
 
 For a task the coordinator has no record of (never submitted, or aged out of
-its bounded history), `task_status()` does not invent a placeholder state.
-"Unknown" is not a value `TaskState` has. Instead the call raises: the real
-exception is `zenode.ServiceError`, imported from the `zenode` package rather
-than defined by `robodog_sdk` itself.
+its bounded history), `task_status()` raises instead of inventing a
+placeholder state, since "unknown" is not a value `TaskState` has. The
+exception is `zenode.ServiceError`, imported from the `zenode` package
+rather than defined by `robodog_sdk` itself.
 
 ```{note}
 `zenode.ServiceTimeout` (raised when nothing answers the status call at all,
@@ -95,7 +93,7 @@ later, and refuse to drive to it when the current id disagrees with the one
 it was stored under: otherwise a rebuilt or re-sessioned map turns a saved
 coordinate into a confident drive to the wrong place.
 
-`map_id()` returns `None` for **no usable map** (nothing published yet, SLAM
+`map_id()` returns `None` for no usable map (nothing published yet, SLAM
 down and the odometry fallback has no map either, or the last identity has
 gone stale) and `None` never means "unchanged from before." Treat it as
 "don't trust this coordinate."

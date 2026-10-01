@@ -1,7 +1,7 @@
 # Asyncio, as met through zenode
 
-Every handler you write in a node is `async def`, and that is not a style
-choice you could opt out of. A node does many things at once (reacting to
+Every handler you write in a node is `async def`, and it has to be. A node
+does many things at once (reacting to
 whichever topics it subscribes to, running its own timers, maybe a
 long-lived background job) and it does all of it on a single thread, using
 one event loop. The loop only makes progress on the next thing once whatever
@@ -22,8 +22,8 @@ just delay itself. It freezes the entire node. Every other subscription
 stops being serviced, every timer stops firing, for as long as that one call
 runs.
 
-On this stack that is not an abstract performance concern; it has a
-concrete robot symptom. If the frozen code was supposed to keep republishing
+On this stack the symptom is physical. If the frozen code was supposed to
+keep republishing
 a movement command, nothing does. The deadman from
 [pub/sub](pubsub.md) has nothing fresh to look at, and within
 `COMMAND_MAX_AGE` the gateway stops the robot, exactly as if your process
@@ -50,23 +50,23 @@ write yourself.
 
 Code runs inside a node in exactly three ways:
 
-- **`@subscribe(...)`**: a message arrived on a topic you're listening to,
-  and the decorated method runs in response. This is most of what you have
+- `@subscribe(...)`: a message arrived on a topic you're listening to, and
+  the decorated method runs in response. This is most of what you have
   written in this guide: `on_odometry` in chapter 3, the collision-aware
   handlers in later chapters.
-- **`@every(...)`**: the clock, not a message, triggers the call, on a
-  fixed interval. Nothing arrived; time simply passed. Use this for polling
-  or periodic work that isn't naturally tied to any one topic.
-- **`self.spawn(coro, name=...)`**: a coroutine started as its own
-  background task, owned by the node for as long as the node runs and
-  canceled automatically when it stops. Chapter 4's driving node uses this
-  to run its drive routine concurrently with `on_start` returning, so the
-  node is fully up and responsive while that routine is still in progress.
+- `@every(...)`: the clock triggers the call, on a fixed interval. Nothing
+  arrived; time passed. Use this for polling or periodic work that isn't
+  tied to any one topic.
+- `self.spawn(coro, name=...)`: a coroutine started as its own background
+  task, owned by the node for as long as the node runs and canceled
+  automatically when it stops. Chapter 4's driving node uses this to run
+  its drive routine concurrently with `on_start` returning, so the node is
+  fully up and responsive while that routine is still in progress.
 
-The three cover different shapes of "when should this run": on a message,
+The three cover different answers to "when should this run": on a message,
 on a schedule, or for the life of the node as its own task. Most nodes in
 this guide only ever needed the first; reach for `@every` or `spawn` once
-something genuinely does not fit inside "runs when a message arrives."
+something does not fit inside "runs when a message arrives."
 
 ## Waiting for several things
 
@@ -77,8 +77,7 @@ Two situations come up often enough to name directly:
 - Bounding how long you're willing to wait for one: `asyncio.wait_for(...)`,
   or an awaitable's own `timeout=` parameter where it offers one. The
   `timeout=` keyword you have already used on `robot.navigate_to(...)` and
-  similar `RobotClient` methods is exactly this: the SDK is not inventing a
-  new waiting convention, it is exposing the one asyncio already has.
+  similar `RobotClient` methods is this same convention, exposed by the SDK.
 
 ## What you do not need
 
@@ -93,7 +92,7 @@ model a node needs.
 If you find yourself copying event-loop boilerplate from a general asyncio
 tutorial (`asyncio.get_event_loop()`, manual `run_until_complete`, a
 `Thread` wrapping a loop of its own), stop: `zenode.run` already did that
-for you, and adding your own on top of it is the most common way to end up
-with two event loops fighting over the same node.
+for you, and adding your own on top of it is a common way to end up with
+two event loops fighting over the same node.
 
 ![Sequence of the first node starting: uv run starts the node, it subscribes at the router, and every odometry sample the simulation publishes is delivered to the handler, which logs the position](../_static/first-node-sequence.svg)

@@ -78,9 +78,8 @@ merely still running.
 **Raised by:** `RobotClient.task_status()` against the real navigation
 coordinator, for a task it has no record of (never submitted, or evicted
 from its bounded history). "Unknown" is not a `TaskState` value, so the
-coordinator refuses to dress it as one: the call answers on Zenoh's error
-channel instead of returning a placeholder result, and that surfaces here as
-an exception. `zenode.ServiceError` is imported from the `zenode` package
+call answers on Zenoh's error channel instead of returning a placeholder
+result, and that surfaces here as an exception. `zenode.ServiceError` is imported from the `zenode` package
 rather than defined by `robodog_sdk` itself. See
 [Navigation](../concepts/navigation.md#asking-about-tasks) for the full
 lifecycle this sits inside.

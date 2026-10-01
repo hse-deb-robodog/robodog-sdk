@@ -22,11 +22,11 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
    need to install it separately: `uv python install 3.12` gets you a
    working interpreter that uv manages for you.
 
-## Start the appliance
+## Start the simulation
 
 1. Download
    [`sim/compose.yaml`](https://raw.githubusercontent.com/hse-deb-robodog/robodog-sdk/main/sim/compose.yaml)
-   (right-click → save as) into an empty directory on your laptop.
+   (right-click, save as) into an empty directory on your laptop.
 2. In that directory, run:
 
    ```bash
@@ -35,57 +35,34 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
 
    **What you should see:** Docker pulls the images the first time, then
    starts three services (`zenoh-router`, `sim-stack`, `mola`), and the
-   terminal fills with interleaved log lines from the simulation as it
+   terminal fills with log lines from the simulation as it
    comes up. Leave this terminal running; the stack stops when you stop
    it.
-3. Open `http://localhost:8080` in your browser. You should see the
+3. Open `http://localhost:7070` in your browser. You should see the
    simulated robot standing in an empty scene, in a web viewer you can
    orbit and zoom with the mouse.
+4. Open `http://localhost:8088/ui` (MOLA UI for SLAM), start the `Sim` source
+   and start Localization on the `sim`-map.
 
-## Send the robot somewhere — no code yet
+## Send the robot somewhere, no code yet
 
 1. Open the nav UI at `http://localhost:8091`.
-
-   🚧 TODO(fabian): add a screenshot of the nav UI once the appliance runs
-
+![nav-webview.png](../_static/nav-webview.png)
 2. Click a point on the map to send it as a navigation goal.
-3. Switch back to the viewer at `http://localhost:8080` and watch the
+3. Switch back to the viewer at `http://localhost:7070` and watch the
    robot walk to the point you clicked.
-
-```{tip}
-Keep this browser page in mind for the rest of the guide: it is your
-control experiment forever after. If clicking a goal in the nav UI moves
-the robot but your own code doesn't, the problem is in your code, not in
-the stack.
-```
 
 ## macOS
 
-Docker Desktop on macOS runs containers in a Linux virtual machine, and
-that VM does not give MuJoCo's renderer access to your GPU. The simulation
-itself is too slow to be useful there. Run it as a hybrid instead: the
-router and SLAM stay in Docker, and the simulation runs natively on your
-Mac.
-
-1. Start only the containerized services:
-
-   ```bash
-   docker compose up zenoh-router mola
-   ```
-
-2. Run the simulation natively, pointed at the router from step 1.
-
-   🚧 TODO(fabian): exact native-sim install/run commands for macOS once
-   verified on the prof's machine (MUJOCO_GL=glfw, uv run sim against
-   localhost router)
+TODO @JB 
 
 ## Running the stack from source (optional)
 
 If you are developing the control stack itself, or your platform can't run
 the published images, you can run the stack from source instead of Docker
 images. This requires access to the private
-[`hse-deb-algo-athlets/robodog-digipro`](https://github.com/hse-deb-algo-athlets/robodog-digipro)
-repository; ask your instructor for access. Once you have it, its
+[`hse-deb-robodog/robodog-core`](https://github.com/hse-deb-robodog/robodog-core)
+repository. Once you have it, its
 README/setup guide has the full instructions; the quick start is:
 `uv sync --all-extras` to install dependencies, copy
 `config/config.toml.example` to a working config file, start the Zenoh
@@ -103,7 +80,7 @@ to run the simulation itself.
   it is running, then retry.
 - *Viewer is black or empty:* give the simulation about 10 seconds to
   finish starting up after the log lines appear, then reload
-  `http://localhost:8080`.
+  `http://localhost:7070`.
 ```
 
 ## Where to go next

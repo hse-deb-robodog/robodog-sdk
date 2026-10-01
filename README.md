@@ -10,8 +10,7 @@ itself.
 ![The Robodog control stack processes around the central Zenoh router, with your node joining from outside on the same topics](docs/_static/architecture.svg)
 
 Built on [zenode](https://github.com/hse-deb-robodog/zenode), with
-[pydantic](https://docs.pydantic.dev) message types. Those are the only two
-dependencies, so it installs on any laptop in seconds.
+[pydantic](https://docs.pydantic.dev) message types.
 
 ## Documentation
 
@@ -30,14 +29,9 @@ place to start:
 uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v0.2.1"
 ```
 
-Pin a tag: the project uses semantic versioning and `0.x` minor versions may
-still move topic keys. Check the
-[releases](https://github.com/hse-deb-robodog/robodog-sdk/releases) page
-for the current one.
+## Quickstart
 
-## A taste
-
-A complete node that watches the robot's position and stops it past a line:
+A complete node that watches the robot's position and stops it after 2m:
 
 ```python
 from zenode import Node, run, subscribe

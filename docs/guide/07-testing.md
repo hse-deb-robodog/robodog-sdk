@@ -13,21 +13,19 @@ from chapter 5.
 
 `zenode.testing.harness()` runs your nodes in a single process over an
 in-memory transport. There is no router, no network, and no appliance.
-Starting a node under the harness is just as fast as calling a function,
-which is what makes it reasonable to do on every test run, not just
-occasionally by hand.
+Starting a node under the harness is about as fast as calling a function,
+so it is cheap enough to do on every test run.
 
 A harness on its own is empty: nothing publishes odometry, nothing accepts a
 navigation goal. `robodog_sdk.testing` supplies doubles that play the
 stack's side of the conversation:
 
-- **`FakeStack`** latches state on the same topics the real stack
-  publishes (odometry, battery, safety, the gateway status) and records
-  every command your node sends, so a test can assert on what was
-  published rather than guess at side effects.
-- **`FakeNav`** stands in for the navigation coordinator: it accepts a
-  goal, streams feedback while the "task" is running, and ends it wherever
-  you tell it to, including states a real robot might take minutes, or an
+- `FakeStack` latches state on the same topics the real stack publishes
+  (odometry, battery, safety, the gateway status) and records every command
+  your node sends, so a test can assert on what was published.
+- `FakeNav` stands in for the navigation coordinator: it accepts a goal,
+  streams feedback while the "task" is running, and ends it wherever you
+  tell it to, including states a real robot might take minutes, or an
   obstacle, to reach.
 
 ## A complete test
@@ -37,20 +35,19 @@ stack's side of the conversation:
 :language: python
 ```
 
-This is not a paraphrase: it is the actual test that runs against
-`Wanderer` in this project's CI. Walking its anatomy:
+This is the actual test that runs against `Wanderer` in this project's CI.
+Walking through it:
 
 1. **Start the fake, then your node.** `FakeStack` must be running before
-   `Wanderer` starts, so the state your node subscribes to already has a
-   value the moment it looks: nodes read latched topics, not a channel
-   that might still be empty.
+   `Wanderer` starts, so the latched state your node subscribes to already
+   has a value the moment it looks.
 2. **Poke state.** `stack.set_pose(x=0.0, y=0.0)` publishes an odometry
-   frame, exactly as the real stack would after the robot moved.
+   frame, as the real stack would after the robot moved.
 3. **Sleep a settle interval.** Publishing is asynchronous: the handler
-   that reacts to the new pose runs on the event loop, not synchronously
-   inside `set_pose`. `SETTLE = 0.2` gives it room to run before the test
-   inspects anything. This is generous on purpose: assert on behavior, not
-   on how fast the machinery happens to be today.
+   that reacts to the new pose runs on the event loop, after `set_pose`
+   returns. `SETTLE = 0.2` gives it room to run before the test inspects
+   anything. The interval is generous on purpose, so the test depends on
+   behavior and not on how fast the machinery happens to be today.
 4. **Assert on what the fake recorded.** `stack.last_command` is the most
    recent `MovementCommand` `Wanderer` published; `stack.stopped` is
    `True` once that command is zero velocity. Nothing here inspects
@@ -70,31 +67,30 @@ let you fake all of them directly:
 :language: python
 ```
 
-- **`stack.set_battery(soc=..., level=...)`** publishes a battery state,
+- `stack.set_battery(soc=..., level=...)` publishes a battery state,
   including `BatteryLevel.critical` at 5% charge, without spending an
   afternoon running a real pack flat.
-- **`stack.set_driver(source, ...)`** publishes a gateway status, which is
-  how a test says "a human just took the gamepad": a preemption your node
-  can't provoke from its own commands, because it's a fact about who else
-  is driving, not about what it sent.
-- **`stack.set_safety(estop=True, ...)`** fakes the e-stop being pressed.
+- `stack.set_driver(source, ...)` publishes a gateway status, which is how
+  a test says "a human just took the gamepad". Your node cannot provoke
+  that preemption from its own commands, because it is a fact about who
+  else is driving.
+- `stack.set_safety(estop=True, ...)` fakes the e-stop being pressed.
   `stack.set_safety(source_alive=False, phase=EstopPhase.SOURCE_LOST)`
   fakes the safety source going silent instead, a different cause that
   stops the robot just as hard, and a branch worth testing separately from
   a pressed button.
-- **`nav.result_state = TaskState.BLOCKED`** makes the next task the fake
+- `nav.result_state = TaskState.BLOCKED` makes the next task the fake
   coordinator finishes end BLOCKED, exercising your node's BLOCKED branch
   without an obstacle anywhere near the robot.
-- **`nav.activity = NavActivity.STALLED`** fakes a mid-task stall (the
-  same sub-state a real skill reports when it's stopped in front of
-  something but still trying) without needing anything to actually stop
-  it.
+- `nav.activity = NavActivity.STALLED` fakes a mid-task stall (the same
+  sub-state a real skill reports when it is stopped in front of something
+  but still trying) without anything having to stop it.
 
 ```{note}
-These are stand-ins, not physics: nothing moves, and no motor ever spins.
-"Does the robot actually get there" is a question for the simulation
-(chapter 2), not for the fakes. Use the fakes to test how your node
-*decides*; use the simulation to test whether the robot *arrives*.
+Nothing moves under the fakes, and no motor ever spins. Whether the robot
+actually gets there is a question for the simulation (chapter 2). Use the
+fakes to test how your node *decides*; use the simulation to test whether
+the robot *arrives*.
 ```
 
 ## Set it up in your own project

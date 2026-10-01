@@ -15,9 +15,9 @@ and reported back. This chapter does the identical thing from code:
 `robot.navigate_to(x, y)` is the same submit, the same coordinator, the same
 task lifecycle, just called from your process instead of a browser.
 
-Keep that browser page open as you work through this chapter. It remains
-your control experiment: if a goal you click there arrives but the same goal
-from code doesn't, the problem is in your code, not the stack.
+Keep that browser page open as you work through this chapter. It is your
+control experiment: if a goal you click there arrives but the same goal
+from code doesn't, the problem is in your code rather than the stack.
 
 ## A task ends in one of four states
 
@@ -32,9 +32,9 @@ things happened, carried in `result.state`:
 - `TaskState.SUCCEEDED`: the only one of the four that means the robot
   arrived.
 - `TaskState.BLOCKED`: the robot met the world and gave up trying, whether
-  an obstacle that never cleared or no plan through the map. This is not an
-  exception and not a bug. It is an outcome your code needs to handle, the
-  same way you'd handle `SUCCEEDED`.
+  an obstacle that never cleared or no plan through the map. Nothing is
+  raised and nothing is broken. Your code handles it the same way it
+  handles `SUCCEEDED`.
 - `TaskState.FAILED`: something was wrong with the task itself, such as no
   pose source, no map, or an unhandled error in the skill.
 - `TaskState.CANCELED`: a client (possibly this one, possibly another)
@@ -54,8 +54,8 @@ normally, `aligning` while rotating onto a heading, `stalled` when it's
 stopped in front of something, `retreating` while backing off to the last
 waypoint it passed.
 
-A `stalled` activity is transient, not a verdict: the skill is still
-trying, and it may resume cruising on its own. `robot.navigating` tells you
+A `stalled` activity is transient: the skill is still trying, and it may
+resume cruising on its own. `robot.navigating` tells you
 whether a task is under way at all (it's a freshness check on that feedback
 stream, not a lookup by task id), which is handy for a periodic watcher.
 `examples/navigate.py` in the repo has a `_watch()` background task that logs
@@ -101,9 +101,6 @@ the skills, and the map identity fit together.
 - **The task ends `FAILED` immediately.** Usually means the localization
   stack (MOLA) isn't running, or there's no map loaded for it to localize
   against.
-
-  🚧 TODO(fabian): what does nav report when MOLA is absent — exact failure
-  mode for the troubleshooting box
 
 ## Where to go next
 

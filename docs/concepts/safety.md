@@ -34,11 +34,11 @@ command.
 
 `robot.motion_permitted(within=...)` is the call built to close that gap.
 It also fails safe on silence: a safety latch that stopped arriving reads
-exactly like one saying "stopped" would, which is deliberate: a crashed
-safety node or a severed link must not read as permission just because
-nothing contradicts it. That is why this is a method that takes a freshness
-window, rather than a plain property: the answer depends on *when* the last
-frame arrived, not only on what it said.
+like one saying "stopped", so a crashed safety node or a severed link
+cannot read as permission just because nothing contradicts it. That is why
+this is a method that takes a freshness window, rather than a plain
+property: the answer depends on *when* the last frame arrived as well as
+on what it said.
 
 Reading `state.safety.value.estop` directly skips both of these. Don't: it
 neither accounts for the recovery-phase gap nor treats an old value as
@@ -66,8 +66,7 @@ while not self.robot.motion_permitted():
     await asyncio.sleep(1.0)
 ```
 
-A `motion_permitted()` that returns `False` is not something your node can
-argue with: it is a report of a stop already in effect somewhere in the
-stack. Waiting on it, the way the loop above does, is the whole response: log
-it, back off, and check again, rather than treating it as a fault your node
-needs to recover from.
+A `motion_permitted()` that returns `False` reports a stop already in
+effect somewhere in the stack, and your node cannot argue with it. Log it,
+back off, and check again, the way the loop above does. It is not a fault
+your node needs to recover from.
