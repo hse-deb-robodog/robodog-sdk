@@ -1,5 +1,24 @@
 # Examples
 
+## Good node to start
+
+The [wasd-node.py](wasd-node.py) shows a basic example how to build your first node. 
+
+It introduces the concepts:
+
+- Implementation of the base class `Node` with the methods `on_start` and `on_stop`.
+- Topic subscription with the `on_pose`-method
+- Timed method call with `wasd_mover`
+- Message publishing with `publish(MotionTopics.request)` and message definition `MovementCommand`
+
+Run the node with 
+
+```bash
+uv run examples/wasd-node.py
+```
+
+## Collision aware movement example
+
 Two nodes, one behaviour: drive forward until 2 m are covered or a collision
 zone fires, then stop.
 
