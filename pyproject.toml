@@ -52,7 +52,7 @@ build-backend = "uv_build"
 zenode = { git = "https://github.com/hse-deb-robodog/zenode.git", tag = "v0.1.0" }
 
 [tool.uv]
-default-groups = ["dev"]
+default-groups = ["dev", "examples"]
 
 [dependency-groups]
 dev = [
@@ -61,6 +61,11 @@ dev = [
     "pyright>=1.1.410",
     "ruff>=0.12",
     "pre-commit>=4.6.1",
+]
+examples = [
+    # Needed only by examples/wasd-node.py (keyboard teleop). A dependency
+    # group, not an extra, so it is never shipped with the package.
+    "pygame>=2.6",
 ]
 docs = [
     # Built in CI and on demand (uv run --group docs …); never shipped, so the
