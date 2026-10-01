@@ -2,7 +2,7 @@
 
 This document is for changing the SDK itself. If you only want to *use* the
 SDK in your project, you never need it: start with the
-[guide](https://hse-deb-algo-athlets.github.io/robodog-sdk/guide/) instead.
+[guide](https://hse-deb-robodog.github.io/robodog-sdk/guide/) instead.
 
 ## When a change belongs in the SDK
 
@@ -92,9 +92,9 @@ The steps:
    checks), and it must be `v`-prefixed.
 
 4. Check that the release workflow went green and the release appeared on
-   the [releases page](https://github.com/hse-deb-algo-athlets/robodog-sdk/releases).
+   the [releases page](https://github.com/hse-deb-robodog/robodog-sdk/releases).
    Then tell the people who need to update; the guide's
-   [updating section](https://hse-deb-algo-athlets.github.io/robodog-sdk/guide/03-first-project.html#updating-the-sdk-later)
+   [updating section](https://hse-deb-robodog.github.io/robodog-sdk/guide/03-first-project.html#updating-the-sdk-later)
    covers their side.
 
 🚧 TODO(fabian): who is allowed to tag releases: maintainers only, or any

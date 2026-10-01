@@ -9,30 +9,30 @@ itself.
 
 ![The Robodog control stack processes around the central Zenoh router, with your node joining from outside on the same topics](docs/_static/architecture.svg)
 
-Built on [zenode](https://github.com/hse-deb-algo-athlets/zenode), with
+Built on [zenode](https://github.com/hse-deb-robodog/zenode), with
 [pydantic](https://docs.pydantic.dev) message types. Those are the only two
 dependencies, so it installs on any laptop in seconds.
 
 ## Documentation
 
-The docs at <https://hse-deb-algo-athlets.github.io/robodog-sdk/> are the
+The docs at <https://hse-deb-robodog.github.io/robodog-sdk/> are the
 place to start:
 
 | Section | Covers |
 |---|---|
-| [Guide](https://hse-deb-algo-athlets.github.io/robodog-sdk/guide/) | New here? Start at chapter 1: from an empty laptop to your code driving the robot |
-| [Concepts](https://hse-deb-algo-athlets.github.io/robodog-sdk/concepts/) | How the system works under the hood |
-| [Reference](https://hse-deb-algo-athlets.github.io/robodog-sdk/reference/) | Every topic, class and exception |
+| [Guide](https://hse-deb-robodog.github.io/robodog-sdk/guide/) | New here? Start at chapter 1: from an empty laptop to your code driving the robot |
+| [Concepts](https://hse-deb-robodog.github.io/robodog-sdk/concepts/) | How the system works under the hood |
+| [Reference](https://hse-deb-robodog.github.io/robodog-sdk/reference/) | Every topic, class and exception |
 
 ## Install
 
 ```bash
-uv add "robodog-sdk @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v0.2.1"
+uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v0.2.1"
 ```
 
 Pin a tag: the project uses semantic versioning and `0.x` minor versions may
 still move topic keys. Check the
-[releases](https://github.com/hse-deb-algo-athlets/robodog-sdk/releases) page
+[releases](https://github.com/hse-deb-robodog/robodog-sdk/releases) page
 for the current one.
 
 ## A taste

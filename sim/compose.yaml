@@ -1,44 +1,32 @@
-# The simulated Robodog control stack. One command brings up the same set of
-# programs that runs on the real dog's Jetson:
-#
-#     docker compose up
-#
-# Web viewer:  http://localhost:8080   (watch the simulated robot)
-# Nav UI:      http://localhost:8091   (click to send navigation goals)
+# Web viewer:   http://localhost:7070
+# Nav UI:       http://localhost:8091
+# MOLA UI:      http://localhost:8088/ui
 services:
   zenoh-router:
-    # The router version the stack deploys with (robodog-digipro
-    # docker/docker-compose.yml).
     image: eclipse/zenoh:1.9.0
     ports:
       - "7447:7447"
 
   sim-stack:
-    # Simulation, motion gateway, safety, navigation, system-state, joy and
-    # the nav web UI in one image, published from the robodog-digipro CI.
-    # 🚧 TODO(fabian): replace with the first published tag once the image exists
-    image: ghcr.io/hse-deb-algo-athlets/robodog-sim-stack:latest
+    image: ghcr.io/hse-deb-robodog/robodog-sim-stack:latest
     depends_on:
       - zenoh-router
     environment:
       ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447
-      # nav and the nav UI fetch the map from MOLA's HTTP API.
       MOLA_API_URL: http://mola:8088
     ports:
-      - "8080:8080"   # mjviser web viewer
+      - "7070:7070"   # mjviser web viewer
+      - "8080:8080"   # process-compose API
       - "8091:8091"   # nav-map web UI
-    # Gamepad teleoperation (Linux only): uncomment to pass your gamepad
-    # through to the joy node. Has no effect on Windows/macOS.
-    # devices:
+    # Gamepad (Linux only):
     #   - /dev/input:/dev/input
 
   mola:
-    # LiDAR-inertial SLAM. Consumes the simulated Livox point cloud over
-    # Zenoh and publishes pose, map identity and the occupancy grid; nav and
-    # the nav UI reach its map API container-internally on port 8088.
-    # 🚧 TODO(fabian): image name+tag of the published MOLA image
-    image: ghcr.io/hse-deb-algo-athlets/robodog-mola:latest
+    image: ghcr.io/hse-deb-robodog/robodog-mola:latest
     depends_on:
       - zenoh-router
+    ports:
+      - "8088:8088"
+      - "8765:8765"
     environment:
       ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447

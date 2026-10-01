@@ -16,5 +16,5 @@ errors
 Looking for how to move your project to a newer SDK version? See
 [updating the SDK](../guide/03-first-project.md#updating-the-sdk-later) in
 the guide. For changing the SDK itself, see
-[CONTRIBUTING.md](https://github.com/hse-deb-algo-athlets/robodog-sdk/blob/main/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/hse-deb-robodog/robodog-sdk/blob/main/CONTRIBUTING.md)
 in the repository.

@@ -25,7 +25,7 @@ Prerequisites: chapter 1 read; a laptop with about 8 GB of RAM free.
 ## Start the appliance
 
 1. Download
-   [`sim/compose.yaml`](https://raw.githubusercontent.com/hse-deb-algo-athlets/robodog-sdk/main/sim/compose.yaml)
+   [`sim/compose.yaml`](https://raw.githubusercontent.com/hse-deb-robodog/robodog-sdk/main/sim/compose.yaml)
    (right-click → save as) into an empty directory on your laptop.
 2. In that directory, run:
 

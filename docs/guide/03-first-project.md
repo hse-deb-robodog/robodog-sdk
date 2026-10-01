@@ -18,7 +18,7 @@ Prerequisites: chapter 2, with the appliance running.
 2. Add `robodog-sdk` as a dependency:
 
    ```bash
-   uv add "robodog-sdk @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v%%SDK_VERSION%%"
+   uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v%%SDK_VERSION%%"
    ```
 
    **What you should see:** uv resolves the package and reports it installed,
@@ -130,7 +130,7 @@ Your project pins the SDK to a tag, so it never changes underneath you. When
 a new version comes out, updating is a deliberate step:
 
 1. Read the
-   [changelog](https://github.com/hse-deb-algo-athlets/robodog-sdk/blob/main/CHANGELOG.md)
+   [changelog](https://github.com/hse-deb-robodog/robodog-sdk/blob/main/CHANGELOG.md)
    for the new version first. It is written for exactly this moment: it tells
    you what a bump costs you. The project uses semantic versioning, and while
    the version is `0.x`, a minor release may move topic keys, so an update
@@ -139,7 +139,7 @@ a new version comes out, updating is a deliberate step:
 2. Re-run the install command with the new tag:
 
    ```bash
-   uv add "robodog-sdk @ git+https://github.com/hse-deb-algo-athlets/robodog-sdk@v%%SDK_VERSION%%"
+   uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v%%SDK_VERSION%%"
    ```
 
 3. Run your tests (chapter 7) and start your node against the simulation

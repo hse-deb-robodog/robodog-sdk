@@ -50,7 +50,7 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "pydantic": ("https://docs.pydantic.dev/latest", None),
     # :class:`zenode.Node` and friends resolve into the zenode docs.
-    "zenode": ("https://hse-deb-algo-athlets.github.io/zenode/", None),
+    "zenode": ("https://hse-deb-robodog.github.io/zenode/", None),
 }
 
 templates_path = []
@@ -74,7 +74,7 @@ redirects: dict[str, str] = {
 html_theme = "furo"
 html_title = f"robodog-sdk {release}"
 html_theme_options = {
-    "source_repository": "https://github.com/hse-deb-algo-athlets/robodog-sdk",
+    "source_repository": "https://github.com/hse-deb-robodog/robodog-sdk",
     "source_branch": "main",
     "source_directory": "docs/",
 }
