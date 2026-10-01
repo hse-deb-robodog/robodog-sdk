@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 920 464" role="img" aria-labelledby="robodog-safety-title robodog-safety-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="robodog-safety-title">Safety chain — hardware button versus software stop</title>
+  <desc id="robodog-safety-desc">Pressing the physical e-stop button engages a latch that denies motion until the release press on the panel clears it; calling emergency_stop from software publishes a cancel event that the safety node, the navigation coordinator and the fleet bridge each act on, but nothing latches.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5f85"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#b6163d"/>
+    </marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#007ea6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+  <!-- Zones -->
+  <rect x="40" y="56" width="400" height="328" rx="8" fill="rgba(25,48,88,0.02)" stroke="rgba(25,48,88,0.10)" stroke-width="0.8"/>
+  <rect x="56" y="60" width="132" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="60" y="69" fill="rgba(25,48,88,0.40)" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em">THE PHYSICAL BUTTON</text>
+  <rect x="480" y="56" width="400" height="328" rx="8" fill="rgba(25,48,88,0.02)" stroke="rgba(25,48,88,0.10)" stroke-width="0.8"/>
+  <rect x="496" y="60" width="200" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="500" y="69" fill="rgba(25,48,88,0.40)" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em">SOFTWARE — EMERGENCY_STOP()</text>
+
+  <!-- Connectors (before boxes) -->
+  <line x1="240" y1="160" x2="240" y2="208" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <rect x="252" y="176" width="44" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="256" y="185" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace">press</text>
+
+  <line x1="680" y1="160" x2="680" y2="208" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <rect x="692" y="176" width="88" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="696" y="185" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace">one event</text>
+
+  <path d="M 628,256 V 272 Q 628,280 620,280 H 560 Q 552,280 552,288 V 304" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="680" y1="256" x2="680" y2="304" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 732,256 V 272 Q 732,280 740,280 H 800 Q 808,280 808,288 V 304" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- Left column -->
+  <rect x="136" y="104" width="208" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="240" y="128" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">E-stop button</text>
+  <text x="240" y="146" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">on the robot / panel</text>
+
+  <rect x="136" y="208" width="208" height="64" rx="6" fill="#f7f7f7"/>
+  <rect x="136" y="208" width="208" height="64" rx="6" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="240" y="234" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Safety latch</text>
+  <text x="240" y="252" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">LATCHES — motion denied</text>
+
+  <text x="136" y="296" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">Only the release press on the panel</text>
+  <text x="136" y="316" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">clears it — software cannot.</text>
+
+  <rect x="136" y="328" width="208" height="48" rx="6" fill="#f0f0f0" stroke="rgba(25,48,88,0.20)" stroke-width="1"/>
+  <text x="240" y="348" fill="#193058" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">robot.motion_permitted()</text>
+  <text x="240" y="364" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">the latch releases one phase early — ask this</text>
+
+  <!-- Right column -->
+  <rect x="576" y="104" width="208" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="680" y="128" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Software stop</text>
+  <text x="680" y="146" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">robot.emergency_stop()</text>
+
+  <rect x="576" y="208" width="208" height="48" rx="6" fill="#f7f7f7"/>
+  <rect x="576" y="208" width="208" height="48" rx="6" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="680" y="228" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Cancel event</text>
+  <text x="680" y="246" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">safety/cancel — does not latch</text>
+
+  <rect x="496" y="304" width="112" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="552" y="324" fill="#193058" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Safety node</text>
+  <text x="552" y="340" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">zeroes the robot</text>
+  <rect x="624" y="304" width="112" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="680" y="324" fill="#193058" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nav coordinator</text>
+  <text x="680" y="340" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">cancels the task</text>
+  <rect x="752" y="304" width="112" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="808" y="324" fill="#193058" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Fleet bridge</text>
+  <text x="808" y="340" fill="#4a5f85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">wipes the orders</text>
+
+  <!-- Bottom aside -->
+  <text x="40" y="432" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">A safety source that goes silent reads exactly like one saying "stopped" — motion_permitted() fails safe on silence.</text>
+</svg>

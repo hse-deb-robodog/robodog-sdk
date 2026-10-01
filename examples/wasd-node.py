@@ -1,13 +1,21 @@
-from datetime import timedelta
-
-from zenode import Node, run, subscribe, every, publish
-from robodog_sdk import OdometryState, RobotClient, StateTopics, MotionTopics, MovementCommand, MovementSource
+from typing import Any
 
 import pygame
+from zenode import Node, every, publish, run, subscribe
+
+from robodog_sdk import (
+    MotionTopics,
+    MovementCommand,
+    MovementSource,
+    OdometryState,
+    RobotClient,
+    StateTopics,
+)
 
 #: Teleop speeds, m/s and deg/s — well inside the envelope in robodog_sdk.limits.
 TELEOP_LINEAR_MS = 0.5
 TELEOP_YAW_DEG = 60.0
+
 
 class WasdNode(Node):
     name = "wasd-node"
@@ -16,7 +24,7 @@ class WasdNode(Node):
     # mtopic = publish(MotionTopics.move) # raw movement
     mtopic = publish(MotionTopics.request)  # seve movement
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         pygame.init()
         pygame.display.set_mode((320, 120))
@@ -50,8 +58,10 @@ class WasdNode(Node):
         self.log.info("stop")
         self.mtopic.put(MovementCommand())
 
+
 def cli() -> None:
     run(WasdNode)
+
 
 if __name__ == "__main__":
     cli()

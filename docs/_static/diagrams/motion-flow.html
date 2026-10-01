@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How a movement command reaches the robot</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; padding: 2rem; background: #f7f7f7; font-family: 'Geist', sans-serif; color: #193058; }
+  .eyebrow { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #7d8bab; margin: 0 0 0.5rem; }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.75rem; margin: 0 0 1.5rem; }
+  svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<p class="eyebrow">ROBODOG-SDK · CONCEPTS</p>
+<h1>How a movement command reaches the robot</h1>
+<svg viewBox="0 0 920 400" role="img" aria-labelledby="robodog-motion-title robodog-motion-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="robodog-motion-title">Motion command flow and arbitration</title>
+  <desc id="robodog-motion-desc">Four command sources — controller, assisted teleop, planner and autonomous code — publish into one motion inlet whose commands expire after 0.3 seconds; the motion gateway forwards the freshest command with the highest rank, shapes it near obstacles, and sends the result to the robot.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a5f85"/>
+    </marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#b6163d"/>
+    </marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#007ea6"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+  <!-- Connectors (before boxes) -->
+  <path d="M 260,120 H 304 Q 312,120 312,128 V 152 Q 312,160 320,160 H 380" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="260" y1="192" x2="380" y2="192" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 260,264 H 320 Q 328,264 328,256 V 216 Q 328,208 336,208 H 380" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 260,336 H 336 Q 344,336 344,328 V 232 Q 344,224 352,224 H 380" fill="none" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="560" y1="192" x2="620" y2="192" stroke="#4a5f85" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="740" y1="240" x2="740" y2="304" stroke="#b6163d" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+  <rect x="752" y="264" width="112" height="12" rx="2" fill="#f7f7f7"/>
+  <text x="756" y="273" fill="#7d8bab" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">command/motion/move</text>
+
+  <!-- Sources -->
+  <rect x="60" y="96" width="200" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="160" y="116" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Controller</text>
+  <text x="160" y="132" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rank 1 — a human on the sticks</text>
+  <rect x="60" y="168" width="200" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="160" y="188" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Assisted teleop</text>
+  <text x="160" y="204" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rank 2</text>
+  <rect x="60" y="240" width="200" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="160" y="260" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Planner</text>
+  <text x="160" y="276" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rank 3</text>
+  <rect x="60" y="312" width="200" height="48" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="160" y="332" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Autonomous</text>
+  <text x="160" y="348" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rank 4 — your code's default</text>
+
+  <!-- Inlet -->
+  <rect x="380" y="152" width="180" height="80" rx="6" fill="#f7f7f7"/>
+  <rect x="380" y="152" width="180" height="80" rx="6" fill="rgba(25,48,88,0.05)" stroke="#4a5f85" stroke-width="1"/>
+  <text x="470" y="180" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Motion inlet</text>
+  <text x="470" y="198" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">one topic, all sources</text>
+  <text x="470" y="214" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">max_age = 0.3 s</text>
+
+  <!-- Gateway (focal) -->
+  <rect x="620" y="144" width="240" height="96" rx="6" fill="#f7f7f7"/>
+  <rect x="620" y="144" width="240" height="96" rx="6" fill="rgba(182,22,61,0.07)" stroke="#b6163d" stroke-width="1.2"/>
+  <text x="740" y="172" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Motion gateway</text>
+  <text x="740" y="190" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">freshest + highest rank wins</text>
+  <text x="740" y="204" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">collision zones shape commands</text>
+  <text x="740" y="218" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">watchdog on the winner</text>
+
+  <!-- Robot -->
+  <rect x="672" y="304" width="136" height="56" rx="6" fill="#ffffff" stroke="#193058" stroke-width="1"/>
+  <text x="740" y="328" fill="#193058" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Robot</text>
+  <text x="740" y="346" fill="#4a5f85" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">bridge / simulation</text>
+
+  <!-- Editorial aside -->
+  <text x="380" y="288" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">The deadman: stop publishing for 0.3 seconds</text>
+  <text x="380" y="308" fill="#4a5f85" font-size="14" font-family="'Instrument Serif', serif" font-style="italic">and the robot stops.</text>
+</svg>
+</body>
+</html>

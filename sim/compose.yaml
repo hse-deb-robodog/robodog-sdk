@@ -1,0 +1,32 @@
+# Web viewer:   http://localhost:7070
+# Nav UI:       http://localhost:8091
+# MOLA UI:      http://localhost:8088/ui
+services:
+  zenoh-router:
+    image: eclipse/zenoh:1.9.0
+    ports:
+      - "7447:7447"
+
+  sim-stack:
+    image: ghcr.io/hse-deb-robodog/robodog-sim-stack:latest
+    depends_on:
+      - zenoh-router
+    environment:
+      ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447
+      MOLA_API_URL: http://mola:8088
+    ports:
+      - "7070:7070"   # mjviser web viewer
+      - "8080:8080"   # process-compose API
+      - "8091:8091"   # nav-map web UI
+    # Gamepad (Linux only):
+    #   - /dev/input:/dev/input
+
+  mola:
+    image: ghcr.io/hse-deb-robodog/robodog-mola:latest
+    depends_on:
+      - zenoh-router
+    ports:
+      - "8088:8088"
+      - "8765:8765"
+    environment:
+      ZENOH_ROUTER_ENDPOINT: tcp/zenoh-router:7447

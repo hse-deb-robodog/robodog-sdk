@@ -50,7 +50,7 @@ class ClientDrive(Node):
 
     async def _run_drive(self) -> None:
         origin = await self._first_pose()
-        self.log.info("drive started at %.2f, %.2f", origin[0], origin[1])
+        self.log.info(f"drive started at {origin[0]:.2f}, {origin[1]:.2f}")
 
         async with self.robot.driving(x=self.config.speed):
             while not self._blocked and self._travelled_from(origin) < self.config.distance:
@@ -58,15 +58,12 @@ class ClientDrive(Node):
                     # The gateway re-decides every frame, so continuing to
                     # publish would resume the drive once they let go. Giving
                     # up is this example's choice, not the contract's.
-                    self.log.info("yielding to %s", driver.value)
+                    self.log.info(f"yielding to {driver.value}")
                     break
                 await asyncio.sleep(0.1)
 
-        self.log.info(
-            "drive finished after %.2f m%s",
-            self._travelled_from(origin),
-            " (blocked)" if self._blocked else "",
-        )
+        blocked = " (blocked)" if self._blocked else ""
+        self.log.info(f"drive finished after {self._travelled_from(origin):.2f} m{blocked}")
         self.stop()
 
     async def _first_pose(self) -> tuple[float, float]:

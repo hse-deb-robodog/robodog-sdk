@@ -68,7 +68,7 @@ class ContractDrive(Node):
         """Track distance travelled. ``mode="latest"``: only the newest pose matters."""
         if self._origin is None:
             self._origin = (msg.x, msg.y)
-            self.log.info("drive started at %.2f, %.2f", msg.x, msg.y)
+            self.log.info(f"drive started at {msg.x:.2f}, {msg.y:.2f}")
         self._travelled = math.hypot(msg.x - self._origin[0], msg.y - self._origin[1])
         self._pose_trace = trace.current()
 
@@ -76,7 +76,7 @@ class ContractDrive(Node):
     async def on_collision_zone(self, msg: CollisionZoneEvent) -> None:
         """Handle a collision-zone transition: one message per edge."""
         self._blocked = msg.active
-        self.log.warning("collision zone %s", "breached" if msg.active else "clear")
+        self.log.warning(f"collision zone {'breached' if msg.active else 'clear'}")
 
     @every("rate_hz", unit="hz")
     async def tick(self) -> None:
@@ -88,7 +88,7 @@ class ContractDrive(Node):
         with trace.using(self._pose_trace):
             if self._blocked or self._travelled >= self.config.distance:
                 self.cmd.put(MovementCommand(source=MovementSource.autonomous))
-                self.log.info("drive stopped after %.2f m", self._travelled)
+                self.log.info(f"drive stopped after {self._travelled:.2f} m")
                 self.stop()
                 return  # without this the zero command is undone on the next line
             self.cmd.put(MovementCommand(x=self.config.speed, source=MovementSource.autonomous))
