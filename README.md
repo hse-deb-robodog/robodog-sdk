@@ -54,6 +54,15 @@ Chapter 3 of the guide builds a file like this line by line, and chapter 2
 brings up the simulated robot to run it against (one `docker compose up` with
 [`sim/compose.yaml`](sim/compose.yaml)).
 
+## Inspecting a running system
+
+The `zenode` command that comes with the dependency lists the contract and
+shows live traffic (`uv run zenode topics --contract robodog_sdk.topics`,
+`zenode echo`, `zenode health`).
+[zenode-monitor](https://github.com/fabian-bxr/zenode-monitor) is a desktop
+app for the same job: nodes, their metrics, topics with live messages,
+services and logs in one window.
+
 ## What is in this repo
 
 | Path | Contents |

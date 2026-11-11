@@ -5,6 +5,26 @@ Semantic versioning; `0.x` minor versions may move keys.
 
 ## [Unreleased]
 
+### zenode 0.2.0
+
+The dependency is now `zenode>=0.2`, pinned to the `v0.2.0` tag. Nothing in
+the contract or in `RobotClient` changed. What a node gains from the bump:
+
+- `@metric` puts a node's own number on its health heartbeat.
+- A `Topic` key may be a wildcard expression (`sensors/*/temp`) for
+  subscribing, and `Envelope.key` names the concrete key a sample arrived on.
+- `zenode echo`, `hz` and `topics` accept key expressions, and `zenode health`
+  shows the host, `@metric` values and an optional node pattern.
+- Every node publishes a latched descriptor on `node/<name>/info`, which
+  [zenode-monitor](https://github.com/fabian-bxr/zenode-monitor) reads.
+
+zenode now validates names: a node `name` and each namespace segment must
+match `[A-Za-z0-9_.-]+`. A node named with a `/` or a space fails when it is constructed,
+with `ContractError`.
+
+`examples/guide/detections.py` gained a `@metric`, and the guide and the
+pub/sub page describe the new commands and zenode-monitor.
+
 ## [0.2.1] - 2026-08-25
 
 ### A tilt that stays

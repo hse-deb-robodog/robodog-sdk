@@ -77,6 +77,18 @@ Watch what they publish, from another terminal:
 uv run zenode echo "motion/gateway/in" --contract robodog_sdk.topics
 ```
 
+The key may be a wildcard expression. `'motion/**'` follows every motion key
+at once and labels each sample with the key it arrived on:
+
+```bash
+uv run zenode echo 'motion/**' --contract robodog_sdk.topics
+```
+
+For a window instead of a terminal, connect
+[zenode-monitor](https://github.com/fabian-bxr/zenode-monitor) with "Load
+zenode.toml". It shows each example node's health, topics and logs while it
+runs.
+
 ## Running them without a stack
 
 `tests/test_examples.py` starts all three against the doubles in

@@ -27,7 +27,7 @@ classifiers = [
 # mujoco, pyserial) is a node and belongs in robodog-stack, not here — see
 # ADR-010. Optional extras are the escape hatch for external wire formats.
 dependencies = [
-    "zenode>=0.1",
+    "zenode>=0.2",
     "pydantic>=2.7",
 ]
 
@@ -49,7 +49,7 @@ build-backend = "uv_build"
 [tool.uv.sources]
 # `--no-sources` (the Docker build) falls back to the PEP 508 requirement
 # above, which resolves only once zenode is on PyPI.
-zenode = { git = "https://github.com/hse-deb-robodog/zenode.git", tag = "v0.1.0" }
+zenode = { git = "https://github.com/hse-deb-robodog/zenode.git", tag = "v0.2.0" }
 
 [tool.uv]
 default-groups = ["dev", "examples"]

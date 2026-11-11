@@ -96,21 +96,51 @@ plain `async` methods, so from your code a service call reads like any other
 
 ## Seeing the wire
 
-Three commands turn the contract from something you read in source into
+Four commands turn the contract from something you read in source into
 something you can watch live:
 
 ```bash
 uv run zenode topics --contract robodog_sdk.topics
+uv run zenode echo 'safety/**' --contract robodog_sdk.topics
 uv run zenode nodes
 uv run zenode health
 ```
 
 `zenode topics` lists every declared key against the contract module, so you
-can check a key or a message shape without opening `topics.py`. `zenode
+can check a key or a message shape without opening `topics.py`. Give it a
+key expression (`zenode topics 'nav/**' --contract robodog_sdk.topics`) to
+narrow the listing. `zenode echo` prints the messages on a key. The key may
+be a wildcard expression: each sample is then decoded by the contract topic
+its own key belongs to and prefixed with a `-- key=` line, so one command
+follows a whole subtree. `zenode hz` takes the same expressions and reports
+one rate per concrete key. `zenode
 nodes` lists who is actually connected right now: the check for "is my node
 even here." `zenode health` reports each node's heartbeat: counters, queue
 depths, handler latency, the numbers behind "how well is a node doing", not
-just whether it is up.
+just whether it is up. It also shows the host each node runs on and, under
+the table, any numbers a node reports with `@metric`
+(see [your own topics](../guide/08-custom-topics.md#a-number-on-the-heartbeat)).
+`zenode health wanderer` narrows the table to one node.
+
+`nodes` and `health` only see nodes built on zenode, which means yours. The
+stack's own processes are plain Zenoh applications without a presence token
+or a heartbeat, so they do not appear in either listing. Their topics are
+still visible to `echo` and `hz`.
+
+### zenode-monitor
+
+[zenode-monitor](https://github.com/fabian-bxr/zenode-monitor) is a desktop
+app that shows the same information in one window: a card per node with its
+state, host and uptime, charts of the runtime and `@metric` values, the
+topics each node publishes and subscribes with their live messages, a form
+to call a service, and the logs of all nodes. Prebuilt binaries for Linux,
+Windows and macOS are on its
+[releases page](https://github.com/fabian-bxr/zenode-monitor/releases).
+
+Connect it the way your nodes connect: its "Load zenode.toml" button fills
+the form from your project's file, or enter mode `client`, endpoint
+`tcp/127.0.0.1:7447` and namespace `robodog` by hand. Like `zenode nodes`,
+its node pages list nodes built on zenode.
 
 `robodog_sdk.CONTRACT_VERSION` (in `robodog_sdk/__init__.py`, tracking the
 package version) exists so your project and the deployed stack can be
@@ -119,4 +149,4 @@ today. `zenode health` reports node identity and traffic counters, nothing
 about which contract version produced them.
 
 🚧 TODO(fabian): confirm how/where CONTRACT_VERSION surfaces at runtime
-(zenode health does not show it in zenode 0.1.0).
+(zenode health does not show it in zenode 0.2.0).

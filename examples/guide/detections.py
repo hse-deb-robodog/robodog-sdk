@@ -10,7 +10,7 @@ publishers/subscribers on both ends that agree by construction.
 from __future__ import annotations
 
 from pydantic import BaseModel
-from zenode import Node, Topic, TopicSet, every, publish, run, subscribe
+from zenode import Node, Topic, TopicSet, every, metric, publish, run, subscribe
 
 
 class Detection(BaseModel):
@@ -35,9 +35,18 @@ class Detector(Node):
     #: the same pattern `contract_drive.py` uses for `cmd`.
     out = publish(PerceptionTopics.detections)
 
+    _published = 0
+
     @every(0.5)
     async def tick(self) -> None:
         self.out.put(Detection(label="ball", confidence=0.9, x=1.2, y=0.1))
+        self._published += 1
+
+    #: Rides on the node's health heartbeat: `zenode health` prints it and
+    #: zenode-monitor charts it. It reads a cached number and never blocks.
+    @metric("detections_published", unit="{detection}", kind="counter", integral=True)
+    def _detections_published(self) -> int:
+        return self._published
 
 
 class Alerter(Node):

@@ -69,6 +69,39 @@ several of them already, on the stack's own topics:
   everything your handler does in response (further `put()` calls,
   service calls) is linked back to it. Chapter 9 covers tracing.
 
+## One handler for a family of keys
+
+A key may contain zenoh wildcards: `*` matches one segment, `**` any number
+of them. A topic declared that way subscribes to every matching key at once,
+and the handler reads which one spoke from the envelope:
+
+```python
+from zenode import Envelope, Topic, subscribe
+
+by_camera = Topic("perception/*/detections", Detection)
+
+
+@subscribe(by_camera)
+async def on_detection(self, msg: Detection, env: Envelope) -> None:
+    self.log.info(f"{env.key}: {msg.label}")  # robodog/perception/front/detections
+```
+
+`env.key` is the concrete key with the namespace included. A wildcard topic
+is for subscribing only: `publish()` on one raises `ContractError` when the
+class is defined, because a publisher needs one concrete key. Each camera
+publishes on its own `Topic("perception/front/detections", Detection)`.
+
+## A number on the heartbeat
+
+`Detector` also carries a `@metric`. Every node publishes a health heartbeat
+every two seconds, and `@metric` adds one of the node's own numbers to it,
+here the count of detections published so far. The method takes no arguments
+and returns a number, or `None` when the value is unknown. It runs on the
+node's event loop, so it must only read something the node already holds.
+
+Use it for scalars that describe how the node is doing (frames processed,
+queue length, inference time). Data another node acts on belongs on a topic.
+
 ## Naming keys
 
 ```{tip}
@@ -106,6 +139,20 @@ Run `uv run zenode topics` with no `--contract` at all and it reports
 `no registered topics — pass --contract <module> that defines TopicSets`.
 The listing comes from importing the module you name rather than from
 asking a router what is live, so it works even with nothing running.
+
+With `Detector` running, the other commands show the live side:
+
+```bash
+uv run zenode echo 'perception/**' --contract detections --meta
+uv run zenode health detector
+```
+
+`echo` accepts a key expression and decodes each sample by the topic its key
+belongs to. `health` prints the node's heartbeat row and, underneath it,
+`detections_published` with its unit.
+[zenode-monitor](https://github.com/fabian-bxr/zenode-monitor) shows the same
+things in a desktop window; see
+[pub/sub](../concepts/pubsub.md#zenode-monitor).
 
 ## Troubleshooting
 
