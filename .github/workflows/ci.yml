@@ -33,7 +33,9 @@ jobs:
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
-      - run: uv sync --group docs
+      # Pinned: the runner's system Python moves, and pygame (examples group)
+      # has no wheel for the newest one.
+      - run: uv sync --group docs --python 3.13
       - run: uv run sphinx-build -W -b html docs docs/_build/html
 
   build:
