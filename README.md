@@ -26,7 +26,7 @@ place to start:
 ## Install
 
 ```bash
-uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v0.2.1"
+uv add "robodog-sdk @ git+https://github.com/hse-deb-robodog/robodog-sdk@v0.3.0"
 ```
 
 ## Quickstart

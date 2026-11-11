@@ -5,6 +5,8 @@ Semantic versioning; `0.x` minor versions may move keys.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-11
+
 ### zenode 0.2.0
 
 The dependency is now `zenode>=0.2`, pinned to the `v0.2.0` tag. Nothing in
